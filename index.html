@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Coach ⚡ Program</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0e1a;--card:#141a2e;--ink:#eef1ff;--mut:#9aa4c7;--pri:#7c5cff;--pri2:#00d4ff;--ok:#2ee59d;--bad:#ff4d6d;--gold:#ffc53d;--line:#26305a}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.top{max-width:820px;margin:0 auto;padding:16px 20px 6px}
+.top h1{font-size:20px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.pill{font-size:13px;background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:99px}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin:4px 0}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),#9775fa);width:0;transition:width .5s}
+.bar.g i{background:linear-gradient(90deg,var(--gold),#ff922b)}
+.lbl{font-size:12px;color:var(--mut);display:flex;justify-content:space-between}
+.missions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ms{font-size:12px;padding:4px 9px;border-radius:99px;border:1px dashed var(--line);color:var(--mut)}
+.ms.done{border:1px solid var(--ok);color:var(--ok);background:rgba(47,158,68,.08)}
+nav{max-width:820px;margin:8px auto 0;display:flex;gap:6px;padding:0 20px;flex-wrap:wrap}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:13px}
+nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+main{max-width:820px;margin:14px auto;padding:0 20px 50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 10px}
+.tag{display:inline-block;font-size:12px;padding:3px 9px;border-radius:99px;background:rgba(59,91,219,.12);color:var(--pri);margin-bottom:8px}
+.big{font-size:21px;line-height:1.5;margin:6px 0 10px}
+.ar{direction:rtl;color:var(--mut);font-size:15px;line-height:1.7}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.b{background:var(--pri);color:#fff;border:0;padding:10px 18px;border-radius:10px;cursor:pointer;font-size:14px;transition:transform .1s}
+button.b:active{transform:scale(.96)}
+button.b.alt{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+button.b.rec{background:var(--bad);animation:pulse 1s infinite}
+button.b.sm{padding:5px 10px;font-size:13px}
+@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(224,49,49,.2)}}
+.box{min-height:70px;border:1px dashed var(--line);border-radius:10px;padding:12px;margin:12px 0;font-size:16px;line-height:1.6;white-space:pre-wrap}
+.ok{color:var(--ok);font-weight:600}.no{color:var(--bad);font-weight:600;text-decoration:underline}
+.mut{color:var(--mut);font-size:13px}
+.hint{background:rgba(245,159,0,.1);border-left:3px solid var(--gold);padding:8px 12px;border-radius:6px;font-size:14px;margin:8px 0}
+select,textarea{padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:15px;font-family:inherit}
+textarea{width:100%;min-height:80px;margin:10px 0}
+.hide{display:none}
+.warn{background:#fff3bf;color:#5c4400;padding:10px 14px;border-radius:10px;font-size:14px;max-width:780px;margin:6px auto}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opt{padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;font-size:16px;text-align:center}
+.opt:hover{border-color:var(--pri)}
+.opt.right{border-color:var(--ok);background:rgba(47,158,68,.12)}
+.opt.wrong{border-color:var(--bad);background:rgba(224,49,49,.12)}
+.toast{position:fixed;right:20px;bottom:20px;background:var(--pri);color:#fff;padding:10px 16px;border-radius:12px;font-weight:600;opacity:0;transform:translateY(10px);transition:.3s;pointer-events:none;z-index:9}
+.toast.show{opacity:1;transform:none}
+.cf{position:fixed;top:-20px;font-size:24px;animation:fall 2.2s linear forwards;z-index:10;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.6}}
+.list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;background:var(--card);color:var(--ink);text-align:left;font-size:15px}
+.item:hover{border-color:var(--pri)}
+.item.done{border-color:var(--ok);background:rgba(47,158,68,.07)}
+.bub{max-width:82%;padding:10px 14px;border-radius:14px;margin:8px 0;font-size:16px;line-height:1.5}
+.bub.t{background:var(--line);border-bottom-left-radius:4px}
+.bub.y{background:rgba(59,91,219,.15);margin-left:auto;border-bottom-right-radius:4px}
+.bub.y.good{background:rgba(47,158,68,.18)}
+.step{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.step:last-child{border:0}
+.road{font-size:14px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);margin:6px 0}
+.road.now{border-color:var(--pri);background:rgba(59,91,219,.1);font-weight:600}
+input:not([type=checkbox]):not([type=file]){padding:9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:15px;font-family:inherit}
+details summary{cursor:pointer;color:var(--pri);font-size:14px;margin:6px 0}
+/* ===== GAME THEME (dark, refined) ===== */
+:root{--bg:#0d1017;--card:#151a24;--line:#252c3b;--pri:#6c8cff;--ink:#e9ecf5;--mut:#8f98ad;--ok:#3ddc97;--bad:#ff5c7a;--gold:#f5b942}
+body{background:radial-gradient(900px 420px at 50% -120px,rgba(108,140,255,.13),transparent 70%),var(--bg);min-height:100vh}
+.top h1{font-size:20px;font-weight:700;letter-spacing:.2px}
+.top h1 .mut{font-weight:400;font-size:12px}
+.pill{font-weight:600;border:1px solid var(--line);background:#10141d;padding:5px 11px}
+#pLevel{color:var(--gold);border-color:rgba(245,185,66,.45)}
+#pStreak{color:#ff9a5c;border-color:rgba(255,154,92,.4)}
+.bar{height:8px;background:#0a0d14;border:1px solid var(--line)}
+.bar i{background:linear-gradient(90deg,#4f6df0,var(--pri))}
+.bar.g i{background:linear-gradient(90deg,#d99a1f,var(--gold))}
+.ms{background:transparent}
+.ms.done{background:rgba(61,220,151,.1)}
+nav{gap:6px;margin-top:12px}
+nav button{background:#121723;border:1px solid var(--line);color:var(--mut);font-weight:500;transition:.15s}
+nav button:hover{color:var(--ink);border-color:#3a4561}
+nav button.on{background:rgba(108,140,255,.16);color:#fff;border-color:var(--pri)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.28)}
+h2{font-size:17px;font-weight:700}
+.tag{background:rgba(108,140,255,.12);color:var(--pri);border:1px solid rgba(108,140,255,.3);font-weight:600}
+button.b{background:var(--pri);color:#0b0f1c;font-weight:600;border-radius:10px;box-shadow:none;transition:filter .15s,transform .08s}
+button.b:hover{filter:brightness(1.1)}
+button.b:active{transform:translateY(1px)}
+button.b.alt{background:transparent;color:var(--pri);border:1px solid #3a4561;box-shadow:none}
+button.b.alt:hover{border-color:var(--pri)}
+button.b.rec{background:var(--bad);color:#fff;box-shadow:0 0 0 0 rgba(255,92,122,.5)}
+button.b:disabled{opacity:.5}
+a.b{display:inline-block}
+.box{background:#0e121a;border:1px dashed #303852}
+.hint{background:rgba(245,185,66,.07);border-left:3px solid var(--gold)}
+.warn{background:#2e2410;color:#f5d58a;border:1px solid #5a4516}
+.opt{background:#121723;border:1px solid var(--line);border-radius:12px;font-weight:500;transition:.12s}
+.opt:hover{border-color:var(--pri);background:#161c2a}
+.opt.right{border-color:var(--ok);background:rgba(61,220,151,.12)}
+.opt.wrong{border-color:var(--bad);background:rgba(255,92,122,.12);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.item{background:#121723;border-radius:12px;transition:.12s;font-weight:500}
+.item:hover{border-color:var(--pri)}
+.item.done{background:rgba(61,220,151,.08);border-color:rgba(61,220,151,.55)}
+.bub.t{background:#1a2132;border:1px solid var(--line)}
+.bub.y{background:rgba(108,140,255,.18);border:1px solid rgba(108,140,255,.4)}
+.bub.y.good{background:rgba(61,220,151,.16);border-color:var(--ok)}
+.road.now{border-color:var(--pri);background:rgba(108,140,255,.1)}
+.toast{background:var(--pri);color:#0b0f1c;font-weight:700}
+.toast.show{animation:pop .3s}
+@keyframes pop{0%{transform:scale(.85) translateY(8px)}100%{transform:none}}
+input:not([type=checkbox]):not([type=file]),select,textarea{background:#0e121a;border:1px solid var(--line)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);outline-offset:1px}
+details summary{color:var(--pri)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#2b3348;border-radius:10px}::-webkit-scrollbar-track{background:#0d1017}
+@media(max-width:560px){.opts,.list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="login" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px">
+ <div class="card" style="max-width:380px;width:100%;margin:0">
+  <h2>⚡ English Coach</h2>
+  <div id="loginMsg" class="mut">Loading…</div>
+  <form id="loginForm" class="hide" style="margin-top:10px">
+   <input type="email" id="loginEmail" placeholder="your@email.com" required style="width:100%;margin-bottom:10px">
+   <button class="b" style="width:100%" type="submit">Send me a login link</button>
+  </form>
+ </div>
+</div>
+
+<div class="top">
+  <h1><span>⚡ English Coach <span class="mut">· program for living & working abroad</span></span>
+    <span><span class="pill" id="pLevel"></span> <span class="pill" id="pStreak"></span></span></h1>
+  <div class="mut" style="margin:-4px 0 6px"><span id="whoTxt"></span> <button class="b alt sm" id="signOut" style="margin-inline-start:8px">Sign out</button></div>
+  <div class="lbl"><span id="xpLbl"></span><span>Level progress</span></div>
+  <div class="bar"><i id="xpBar"></i></div>
+  <div class="lbl"><span id="goalLbl"></span><span>Daily goal: 100 XP</span></div>
+  <div class="bar g"><i id="goalBar"></i></div>
+  <div class="missions" id="missions"></div>
+</div>
+<div id="warn" class="warn hide">المتصفح ده مش بيدعم التعرف على الصوت. افتحي الملف في Chrome أو Edge.</div>
+
+<nav id="nav">
+  <button data-t="today" class="on">🏠 Today</button>
+  <button data-t="course">🌍 Life Abroad</button>
+  <button data-t="speak">🎙️ Speak</button>
+  <button data-t="lab">⚡ Fluency Lab</button>
+  <button data-t="shadow">🎧 Shadowing</button>
+  <button data-t="grammar">✍️ Grammar</button>
+  <button data-t="dict">👂 Dictation</button>
+  <button data-t="quiz">🎮 Quiz</button>
+  <button data-t="cards">🃏 Phrases</button>
+  <button data-t="ai">🤖 AI Partner</button>
+  <button data-t="me">📊 My Progress</button>
+</nav>
+
+<main>
+
+<!-- TODAY -->
+<section id="t-today">
+  <div class="card">
+    <h2 id="todayHead"></h2>
+    <div class="mut" id="todayFocus"></div>
+    <div id="todayPlan" style="margin-top:10px"></div>
+  </div>
+  <div class="card">
+    <h2>🗺️ 12-week roadmap</h2>
+    <div id="roadmap"></div>
+  </div>
+</section>
+
+<!-- COURSE -->
+<section id="t-course" class="hide">
+  <div id="dlgListWrap" class="card">
+    <h2>🌍 Real-life conversations</h2>
+    <div class="mut" style="margin-bottom:10px">البرنامج بيتكلم دور الطرف التاني بالصوت، وإنتي تردي. كل محادثة تخلصيها = 40 XP.</div>
+    <div class="list" id="dlgList"></div>
+  </div>
+  <div id="dlgPlayer" class="card hide">
+    <div class="row" style="justify-content:space-between">
+      <b id="dlgTitle"></b>
+      <span class="row"><label class="mut"><input type="checkbox" id="dlgHard"> Hard mode (hide my lines)</label>
+      <button class="b alt sm" id="dlgBack">← Back</button></span>
+    </div>
+    <div id="dlgChat" style="margin:10px 0"></div>
+    <div class="row" id="dlgCtrl"></div>
+    <div class="mut" id="dlgMsg" style="margin-top:8px"></div>
+  </div>
+</section>
+
+<!-- SPEAK -->
+<section id="t-speak" class="hide">
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <select id="spMode">
+        <option value="scn">🏗️ Site scenarios</option>
+        <option value="int">💼 Interview practice</option>
+        <option value="trv">✈️ Travel situations</option>
+        <option value="free">💬 Free topics</option>
+      </select>
+      <button class="b alt" id="newPrompt">Next ▶</button>
+    </div>
+    <span class="tag" id="spTag"></span>
+    <div class="big" id="prompt"></div>
+    <div class="hint" id="spHint"></div>
+    <div class="row">
+      <button class="b" id="recBtn">🎙️ Start speaking</button>
+      <span class="mut" id="timer">0:00</span>
+      <span class="mut">(الهدف 45 ثانية)</span>
+    </div>
+    <div class="box" id="transcript" contenteditable="true" spellcheck="false">Your words will appear here…</div>
+    <div class="mut">تقدري تعدلي النص أو تكتبي بنفسك جوه المربع.</div>
+    <div class="row" style="margin-top:8px">
+      <button class="b" id="gcBtn">✅ Check my grammar</button>
+      <button class="b alt" id="aiFbBtn">🤖 AI feedback</button>
+      <button class="b alt" id="copyBtn">📋 Copy for Claude</button>
+    </div>
+    <div id="gcResult" style="margin-top:10px"></div>
+    <div id="aiFb" class="box hide" style="min-height:0"></div>
+  </div>
+</section>
+
+<!-- SHADOW -->
+<section id="t-shadow" class="hide">
+  <div class="card">
+    <div class="row">
+      <select id="shLevel">
+        <option value="0">Everyday</option>
+        <option value="1">Meetings</option>
+        <option value="2">⚡ Electrical & Site</option>
+        <option value="3">Interview</option>
+        <option value="4">✈️ Travel</option>
+      </select>
+      <select id="shRate"><option value="0.7">Slow</option><option value="0.9" selected>Normal</option><option value="1.1">Fast</option></select>
+    </div>
+    <div class="big" id="shText"></div>
+    <div class="ar" id="shAr"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="b alt" id="shPlay">🔊 Listen</button>
+      <button class="b" id="shRec">🎙️ Repeat it</button>
+      <button class="b alt" id="shNext">Next ▶</button>
+    </div>
+    <div class="box" id="shResult">Listen first, then repeat the sentence out loud.</div>
+  </div>
+</section>
+
+<!-- GRAMMAR -->
+<section id="t-grammar" class="hide">
+  <div id="grList" class="card">
+    <h2>✍️ Essential grammar</h2>
+    <div class="mut" style="margin-bottom:10px">شرح مختصر بالعربي + تمارين. خلصي الـ 11 درس بالترتيب.</div>
+    <div class="list" id="grItems"></div>
+  </div>
+  <div id="grPlay" class="card hide"></div>
+</section>
+
+<!-- DICTATION -->
+<section id="t-dict" class="hide">
+  <div class="card">
+    <h2>👂 Dictation</h2>
+    <div class="mut">اسمعي الجملة واكتبي اللي سمعتيه. بتقوي الـ listening والـ spelling.</div>
+    <div class="row" style="margin-top:10px">
+      <button class="b alt" id="dcPlay">🔊 Listen</button>
+      <button class="b alt" id="dcSlow">🐢 Slow</button>
+      <button class="b alt" id="dcNext">Next ▶</button>
+    </div>
+    <textarea id="dcInput" placeholder="Type what you hear…"></textarea>
+    <button class="b" id="dcCheck">Check</button>
+    <div class="box" id="dcResult">—</div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="t-quiz" class="hide">
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <span class="mut">Work + travel vocabulary · 10 questions · 3 lives</span>
+      <span id="qLives"></span>
+    </div>
+    <div id="qBody">
+      <div class="big">جاهزة؟ 🎮</div>
+      <button class="b" id="qStart">Start game</button>
+    </div>
+  </div>
+</section>
+
+<!-- CARDS -->
+<section id="t-cards" class="hide">
+  <div class="card">
+    <div class="mut" id="cardInfo"></div>
+    <div class="big" id="cardFront"></div>
+    <div class="ar" id="cardBack"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="b alt" id="cardSay">🔊 Listen</button>
+      <button class="b alt" id="cardShow">Show meaning</button>
+      <button class="b" id="cardKnow">✅ I know it</button>
+      <button class="b alt" id="cardNo">🔁 Again</button>
+    </div>
+  </div>
+</section>
+
+<!-- AI PARTNER -->
+<section id="t-ai" class="hide">
+  <div class="card">
+    <h2>🤖 AI Conversation Partner</h2>
+    <div class="mut" style="margin-bottom:8px">محادثة حرة بالصوت مع AI بيرد عليكي ويصحح غلطاتك أول بأول (محتاج API key، الخطوات تحت).</div>
+    <div id="aiKeyBox"></div>
+    <div id="aiMain" class="hide">
+      <div class="row">
+        <select id="aiMode">
+          <option value="free">💬 Free chat</option>
+          <option value="interview">💼 Job interview</option>
+          <option value="site">🏗️ Site meeting</option>
+          <option value="travel">✈️ Life abroad</option>
+        </select>
+        <label class="mut"><input type="checkbox" id="aiSpeak" checked> Speak replies</label>
+        <button class="b alt sm" id="aiNew">New chat</button>
+        <button class="b alt sm" id="aiEnd">📝 Get feedback</button>
+      </div>
+      <div id="aiChat" style="margin:10px 0;max-height:46vh;overflow:auto"></div>
+      <div class="row">
+        <button class="b" id="aiMic">🎙️ Speak</button>
+        <input id="aiIn" placeholder="…or type here" style="flex:1;min-width:160px">
+        <button class="b alt" id="aiSend">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLUENCY LAB -->
+<section id="t-lab" class="hide">
+  <div class="card">
+    <h2>⚡ Fluency Lab</h2>
+    <div class="mut">تمارين ضغط وسرعة بتحول اللي عارفاه لكلام تلقائي. القاعدة: <b>متقفيش</b>، الغلط مقبول، الصمت لأ.</div>
+    <div class="row" style="margin:10px 0">
+      <select id="labMode">
+        <option value="432">🔁 4-3-2: نفس الموضوع 3 مرات بوقت أقل</option>
+        <option value="rapid">⚡ Rapid fire: 8 أسئلة، 15 ثانية لكل إجابة</option>
+        <option value="fix">🔧 Fix my mistakes: قولي غلطاتك صح</option>
+        <option value="base">📏 Baseline test: قياس مستواك (60 ثانية)</option>
+      </select>
+      <button class="b" id="labStart">Start</button>
+    </div>
+    <div id="labBody"></div>
+  </div>
+</section>
+
+<!-- MY PROGRESS -->
+<section id="t-me" class="hide"><div id="meBody"></div></section>
+
+</main>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ================= DATA ================= */
+const SCENARIOS=[
+ {q:"Your project manager asks: “Why is the cable pulling delayed?” Explain the reason and give a new date.",h:"The delay is due to… / We are waiting for… / We will finish by…"},
+ {q:"The consultant rejected your material submittal for the distribution boards. Explain what you will do.",h:"I understand the comment. / We will revise and resubmit… / Could you clarify…?"},
+ {q:"You found a clash between the cable tray and an HVAC duct. Report it to the MEP coordinator.",h:"There is a clash between… / I suggest moving… / Can we raise the tray by…?"},
+ {q:"Explain to the site foreman how to install a cable tray safely and correctly.",h:"First… Then… Make sure that… Don't forget to…"},
+ {q:"The client asks about the handover date and the testing and commissioning plan.",h:"We are planning to… / Testing will start on… / Before handover we must…"},
+ {q:"Give a short safety talk to the electricians before working on the main panel.",h:"Before you start, isolate… / Always wear… / Lock out and tag out…"},
+ {q:"The subcontractor delivered the wrong cable size. Call them and solve the problem.",h:"The cable that arrived is… but we ordered… / Please replace it by…"},
+ {q:"Present your quantity take-off (BOQ) results to your manager and explain a big difference from the budget.",h:"According to the drawings… / The difference comes from… / I recommend…"},
+ {q:"The inspector arrives and asks to see the earthing test results. Walk him through them.",h:"This is the earthing resistance test. / The value is within the limit… / Here is the report…"},
+ {q:"Explain a variation order to a colleague: what changed and what is the impact on cost and time?",h:"The client asked us to add… / This affects… / We should submit a VO…"}
+];
+const INTERVIEW=[
+ {q:"Tell me about yourself and your experience as an electrical engineer in construction.",h:"I graduated from… / I currently work as… / My main responsibilities are…"},
+ {q:"What is your experience with shop drawings and GFC drawings?",h:"I prepare… / I coordinate with… / One challenge I faced was…"},
+ {q:"How do BIM and Revit help electrical engineers on a project?",h:"BIM allows us to… / It reduces clashes… / It saves time because…"},
+ {q:"Tell me about a plugin or tool you built to automate work. Why did you build it?",h:"I noticed that… so I developed… As a result…"},
+ {q:"Describe a difficult problem on site and how you solved it.",h:"The situation was… I decided to… In the end…"},
+ {q:"Where do you see yourself in five years?",h:"In five years I would like to… / I want to grow into… / I'm aiming to…"},
+ {q:"Why should we hire you?",h:"I bring… / I'm a fast learner… / I combine engineering with programming…"}
+];
+const TRAVEL=[
+ {q:"You arrive in a new country. Explain to the hotel receptionist that your room is too noisy and ask for another one.",h:"I'm afraid there is a problem… / Could I change my room? / It's too noisy…"},
+ {q:"Your luggage didn't arrive at the airport. Explain to the staff what happened.",h:"My suitcase is missing. / It's a black suitcase… / Please contact me at…"},
+ {q:"You are lost in the city. Ask a stranger for directions to the metro.",h:"Excuse me… / How do I get to…? / Is it far from here?"},
+ {q:"You are at a restaurant. The food is cold. Complain politely.",h:"Excuse me, my food is cold. / Could you heat it up? / I ordered…"},
+ {q:"Introduce yourself to new neighbors and tell them where you are from.",h:"Hi, I'm… I just moved here. / I'm from Egypt… / I work as…"},
+ {q:"You have a stomachache. Explain your symptoms to a doctor.",h:"I've had… since… / It hurts here. / I'm allergic to…"},
+ {q:"Call a landlord and ask about renting an apartment: price, size, deposit.",h:"I'm interested in… / How much is the deposit? / When can I move in?"}
+];
+const FREE=[
+ {q:"Describe your typical workday from morning to evening.",h:"I usually wake up… / After that… / In the afternoon…"},
+ {q:"What are your goals for the next year?",h:"I'm planning to… / I hope to… / My main goal is…"},
+ {q:"Describe your city. What would you show a visitor?",h:"There is a… / You can visit… / It's famous for…"},
+ {q:"Why do you want to speak English fluently?",h:"Because I want to… / It will help me… / It's important for…"},
+ {q:"Describe your perfect weekend.",h:"I would… / First… and then…"},
+ {q:"What did you do yesterday? Give as many details as you can.",h:"Yesterday I… / Then I… / In the evening…"}
+];
+const SHADOW=[
+ [["Could you repeat that, please?","ممكن تعيدي ده لو سمحتي؟"],
+  ["What I mean is that it takes more time.","اللي أقصده إنه بياخد وقت أكتر."],
+  ["Let me think about it for a second.","خليني أفكر ثانية."],
+  ["It depends on what you are looking for.","ده بيعتمد على اللي بتدوري عليه."],
+  ["To be honest, I prefer working from home.","بصراحة، أفضل الشغل من البيت."],
+  ["If I had more time, I would study every day.","لو كان عندي وقت أكتر كنت هذاكر كل يوم."]],
+ [["Let's go through the agenda item by item.","يلا نمشي على جدول الأعمال بند بند."],
+  ["I'll send you the updated drawings by the end of the day.","هبعتلك الرسومات المحدثة قبل آخر اليوم."],
+  ["Could we schedule a meeting to discuss this issue?","ممكن نحدد اجتماع نناقش المشكلة دي؟"],
+  ["We are behind schedule, but we can recover the time.","احنا متأخرين عن الجدول بس نقدر نعوّض الوقت."],
+  ["Please confirm that you received my email.","من فضلك أكد إنك استلمت الإيميل."],
+  ["I'll follow up with the team and get back to you.","هتابع مع الفريق وأرجعلك."]],
+ [["We need to coordinate with the mechanical team before the deadline.","لازم ننسق مع فريق الميكانيكا قبل الموعد النهائي."],
+  ["The cable tray clashes with the air duct on the second floor.","الكابل تراي بيتعارض مع مجرى الهواء في الدور التاني."],
+  ["The voltage drop is within the allowed limit.","هبوط الجهد في الحدود المسموحة."],
+  ["We have submitted the material approval for the circuit breakers.","قدمنا اعتماد الخامات للقواطع."],
+  ["Please make sure the earthing is connected before energizing the panel.","اتأكدوا إن التأريض متوصل قبل تشغيل اللوحة."],
+  ["The as-built drawings must match what was installed on site.","رسومات الـ as-built لازم تطابق اللي اتنفذ في الموقع."],
+  ["We are waiting for the consultant's approval to proceed with the conduits.","مستنيين اعتماد الاستشاري عشان نكمل المواسير."],
+  ["The testing and commissioning will start next week.","الاختبار والتشغيل هيبدأ الأسبوع الجاي."],
+  ["I use Revit to model the lighting and power systems.","بستخدم Revit في نمذجة أنظمة الإضاءة والقوى."],
+  ["I develop plugins that automate repetitive tasks in Revit.","بطور إضافات بتعمل المهام المتكررة في Revit أوتوماتيك."]],
+ [["I'm an electrical BIM engineer with experience in construction projects.","أنا مهندسة كهربا BIM عندي خبرة في مشاريع المقاولات."],
+  ["I'm responsible for shop drawings, quantity surveying and BIM coordination.","مسؤولة عن الشوب دروينج وحصر الكميات وتنسيق الـ BIM."],
+  ["I'm a fast learner and I enjoy solving technical problems.","بتعلم بسرعة وبحب أحل المشاكل التقنية."],
+  ["I combine electrical engineering with programming skills.","بجمع بين هندسة الكهربا ومهارات البرمجة."],
+  ["I'm looking for an opportunity to grow and take on more responsibility.","بدور على فرصة أتطور فيها وأتحمل مسؤولية أكبر."]],
+ [["Excuse me, where can I find the baggage claim?","لو سمحت، فين استلام الشنط؟"],
+  ["I'd like to check in. I have a reservation under my name.","عايزة أعمل تشيك إن. عندي حجز باسمي."],
+  ["Could you recommend a good restaurant nearby?","ممكن ترشحلي مطعم كويس قريب؟"],
+  ["How much does a ticket to the city center cost?","تذكرة وسط البلد بكام؟"],
+  ["I don't speak English very well, but I'm learning.","مش بتكلم إنجليزي كويس جداً بس بتعلم."],
+  ["Is there a pharmacy around here?","في صيدلية هنا قريب؟"],
+  ["Could you speak a little slower, please?","ممكن تتكلم أبطأ شوية لو سمحت؟"],
+  ["I'm sorry, I didn't catch that. Could you say it again?","آسفة مسمعتش كويس. ممكن تعيد؟"]]
+];
+const DIALOGUES=[
+ {id:"airport",t:"✈️ Airport check-in",ar:"في المطار",l:[
+  ["T","Good morning. Where are you flying today?"],["Y","I'm flying to London. Here is my passport."],
+  ["T","Do you have any bags to check in?"],["Y","Yes, I have one suitcase and one carry-on."],
+  ["T","Would you like a window seat or an aisle seat?"],["Y","A window seat, please. What time does boarding start?"],
+  ["T","Boarding starts at ten thirty at gate twelve."],["Y","Thank you very much."]]},
+ {id:"immig",t:"🛂 Passport control",ar:"الجوازات",l:[
+  ["T","What is the purpose of your visit?"],["Y","I'm here for a work trip. I'm an electrical engineer."],
+  ["T","How long are you planning to stay?"],["Y","I'll stay for two weeks."],
+  ["T","Where will you be staying?"],["Y","I'll be staying at a hotel in the city center."],
+  ["T","Enjoy your stay."],["Y","Thank you."]]},
+ {id:"hotel",t:"🏨 Hotel check-in",ar:"الفندق",l:[
+  ["T","Welcome. Do you have a reservation?"],["Y","Yes, I have a reservation under the name Salma."],
+  ["T","Could I see your passport, please?"],["Y","Of course. Is breakfast included?"],
+  ["T","Yes, breakfast is served from seven to ten."],["Y","Great. Could you tell me the Wi-Fi password?"],
+  ["T","Sure, it's on the card. Your room is on the fifth floor."],["Y","Thank you. Could I have a late check-out tomorrow?"]]},
+ {id:"rest",t:"🍽️ At a restaurant",ar:"المطعم",l:[
+  ["T","Hi, are you ready to order?"],["Y","Yes, I'd like the grilled chicken, please."],
+  ["T","Would you like anything to drink?"],["Y","Just water, please. Does the chicken come with rice?"],
+  ["T","Yes, it comes with rice and salad. Is everything okay with your meal?"],["Y","It's delicious, thank you. Could we have the bill, please?"]]},
+ {id:"dir",t:"🧭 Asking for directions",ar:"السؤال عن طريق",l:[
+  ["Y","Excuse me, could you tell me how to get to the train station?"],["T","Sure. Go straight for two blocks, then turn left."],
+  ["Y","Is it far from here?"],["T","No, it's about a ten-minute walk."],
+  ["Y","Thank you so much for your help."],["T","You're welcome. Have a nice day!"]]},
+ {id:"taxi",t:"🚕 Taking a taxi",ar:"التاكسي",l:[
+  ["Y","Hi, could you take me to this address, please?"],["T","Sure. Get in. It'll take about twenty minutes."],
+  ["Y","How much will it cost?"],["T","Around fifteen dollars."],
+  ["Y","Could you drop me off here, please?"],["T","No problem. That'll be fifteen dollars."]]},
+ {id:"pharm",t:"💊 Pharmacy",ar:"الصيدلية",l:[
+  ["T","Hello. How can I help you?"],["Y","I have a headache and a sore throat since yesterday."],
+  ["T","Do you have a fever?"],["Y","No, I don't, but I feel very tired."],
+  ["T","Take this medicine twice a day after meals."],["Y","Are there any side effects? Thank you."]]},
+ {id:"shop",t:"🛍️ Shopping & returns",ar:"التسوق",l:[
+  ["Y","Excuse me, do you have this in a larger size?"],["T","Let me check. Yes, we have it in medium and large."],
+  ["Y","Can I try it on? Where is the fitting room?"],["T","It's at the back of the store."],
+  ["Y","I'll take it. Can I pay by card?"],["T","Sure. Do you want a receipt?"]]},
+ {id:"rent",t:"🏠 Renting an apartment",ar:"إيجار شقة",l:[
+  ["Y","Hello, I'm calling about the apartment for rent."],["T","Yes, it's still available. It has two bedrooms."],
+  ["Y","How much is the rent per month, and are utilities included?"],["T","It's twelve hundred, and utilities are not included."],
+  ["Y","Could I come and see it tomorrow?"],["T","Of course. Is five o'clock okay?"],
+  ["Y","That works for me. Thank you."]]},
+ {id:"sim",t:"📱 Buying a SIM card",ar:"شريحة موبايل",l:[
+  ["Y","Hi, I'd like to buy a SIM card, please."],["T","Sure. Do you want a prepaid or a monthly plan?"],
+  ["Y","Prepaid, please. How much data does it include?"],["T","Ten gigabytes for thirty days."],
+  ["Y","Okay. What documents do you need from me?"],["T","Just your passport."]]},
+ {id:"small",t:"🤝 Small talk",ar:"التعارف",l:[
+  ["T","Hi! I'm Alex. Nice to meet you. Where are you from?"],["Y","Nice to meet you. I'm from Egypt. I live in Giza."],
+  ["T","Oh, nice! What do you do?"],["Y","I'm an electrical BIM engineer. What about you?"],
+  ["T","I work in marketing. Do you like it here?"],["Y","Yes, I love it. The people are very friendly."]]},
+ {id:"lost",t:"🆘 Lost passport",ar:"ضياع الجواز",l:[
+  ["Y","Excuse me, I've lost my passport. What should I do?"],["T","Don't worry. When did you last see it?"],
+  ["Y","I had it this morning at the hotel."],["T","You should report it to the police and contact your embassy."],
+  ["Y","Could you tell me where the nearest police station is?"],["T","It's two streets away, on the right."]]},
+ {id:"site",t:"🏗️ Site meeting",ar:"اجتماع موقع",l:[
+  ["T","Let's start. What's the status of the electrical work?"],["Y","We've finished the cable trays, and we're starting the cable pulling."],
+  ["T","Are there any delays or problems?"],["Y","There is a clash between the tray and the air duct. I suggest raising the tray by fifteen centimeters."],
+  ["T","Okay. Please send me the updated drawings today."],["Y","Sure. I'll send them by the end of the day."]]},
+ {id:"job",t:"💼 Job interview",ar:"مقابلة شغل",l:[
+  ["T","Tell me about yourself."],["Y","I'm an electrical BIM engineer with experience in construction projects, and I develop Revit plugins."],
+  ["T","What is your biggest strength?"],["Y","I'm a fast learner, and I combine engineering with programming."],
+  ["T","Why do you want to work with us?"],["Y","Because I want to grow my skills and work on international projects."]]}
+];
+const GRAMMAR=[
+ {id:"g1",t:"Present Simple",ar:"بنستخدمه للعادات والحقائق والروتين. مع he/she/it بنضيف s للفعل. النفي والسؤال بـ do/does.",
+  ex:["I work on Revit every day.","She doesn't like noise.","Does he live in Cairo?"],
+  q:[["She ___ in Giza.",["live","lives","living"],1],["___ you work on Saturdays?",["Do","Does","Are"],0],["He ___ not like noise.",["do","does","is"],1],["We usually ___ at eight.",["starts","start","starting"],1]]},
+ {id:"g2",t:"Present Continuous",ar:"للحاجة اللي بتحصل دلوقتي أو الفترة دي. am/is/are + الفعل بـ ing.",
+  ex:["I am working now.","They are waiting outside.","What are you doing?"],
+  q:[["I ___ working now.",["am","is","do"],0],["They ___ waiting outside.",["is","are","do"],1],["She is ___ a report.",["write","writes","writing"],2],["What ___ you doing?",["are","do","is"],0]]},
+ {id:"g3",t:"Past Simple",ar:"لحاجة حصلت وخلصت في الماضي. الأفعال المنتظمة + ed، وفي أفعال شاذة (go→went). النفي والسؤال بـ did + الفعل الأصلي.",
+  ex:["I went to the site yesterday.","She finished the drawings last week.","Did you send the email?"],
+  q:[["I ___ to the site yesterday.",["go","went","gone"],1],["She ___ the drawings last week.",["finish","finished","finishing"],1],["Did you ___ the email?",["send","sent","sending"],0],["We didn't ___ the meeting.",["attend","attended","attends"],0]]},
+ {id:"g4",t:"Present Perfect",ar:"بنربط الماضي بالحاضر: خبرة أو نتيجة. have/has + التصريف التالت للفعل. مع for (مدة) و since (من وقت معين).",
+  ex:["I have worked here since 2024.","She has finished the report.","I have never been to London."],
+  q:[["I ___ worked here since 2024.",["have","has","am"],0],["She has ___ the report.",["finish","finished","finishing"],1],["I have never ___ to London.",["be","been","was"],1],["How long ___ you lived here?",["have","did","are"],0]]},
+ {id:"g5",t:"Future: will / going to",ar:"will للقرار اللحظي والتوقع والعروض. going to للخطط والحاجة اللي علاماتها ظاهرة.",
+  ex:["I will call you later.","We are going to start next week.","Look at the clouds! It is going to rain."],
+  q:[["I think it ___ rain tomorrow.",["will","is","does"],0],["We ___ going to start next week.",["is","are","will"],1],["Look at the clouds! It is ___ rain.",["going to","will to","goes"],0],["She is going to ___ a meeting.",["has","have","having"],1]]},
+ {id:"g6",t:"Modal verbs",ar:"can (قدرة)، could (طلب مؤدب)، should (نصيحة)، must (إلزام)، have to (إجبار خارجي). بعدهم الفعل بدون to.",
+  ex:["Could you help me, please?","You must wear a helmet on site.","You should see a doctor."],
+  q:[["___ you help me, please?",["Could","Are","Do"],0],["You ___ wear a helmet on site.",["must","are","do"],0],["You ___ see a doctor.",["should","shoulds","are"],0],["He ___ to work late today.",["have","has","having"],1]]},
+ {id:"g7",t:"Questions (Wh-)",ar:"What (إيه)، Where (فين)، When (إمتى)، Who (مين)، Why (ليه)، How (إزاي) + do/does/did + فاعل + فعل.",
+  ex:["What time does the meeting start?","Where do you live?","How much does it cost?"],
+  q:[["___ time does the meeting start?",["What","Who","Where"],0],["___ is your manager?",["Who","Where","Which"],0],["How ___ does it cost?",["much","many","long"],0],["___ do you live?",["Where","Who","Why"],0]]},
+ {id:"g8",t:"Articles: a / an / the",ar:"a قبل صوت ساكن، an قبل صوت متحرك (a/e/i/o/u)، the لما الحاجة معروفة أو محددة.",
+  ex:["I have an appointment.","She is an engineer.","The sun rises in the east."],
+  q:[["I have ___ appointment.",["a","an","the"],1],["She is ___ engineer.",["a","an","the"],1],["___ sun rises in the east.",["A","An","The"],2],["He works in ___ big company.",["a","an","the"],0]]},
+ {id:"g9",t:"Prepositions: in / on / at",ar:"at للوقت الدقيق والأماكن النقطية، on للأيام والتواريخ والأسطح، in للشهور والسنين والفترات والأماكن الكبيرة.",
+  ex:["The meeting is on Monday.","I wake up at 7 o'clock.","We finish in the evening."],
+  q:[["The meeting is ___ Monday.",["in","on","at"],1],["I wake up ___ 7 o'clock.",["in","on","at"],2],["We finish ___ the evening.",["in","on","at"],0],["The panel is ___ the wall.",["on","in","at"],0]]},
+ {id:"g10",t:"Conditionals (If…)",ar:"النوع الأول: If + حاضر، will + فعل (احتمال حقيقي). النوع التاني: If + ماضي، would + فعل (خيال أو غير حقيقي).",
+  ex:["If it rains, we will stay inside.","If I had more time, I would study more.","I would travel more if I were rich."],
+  q:[["If it rains, we ___ stay inside.",["will","would","did"],0],["If I ___ more time, I would study more.",["have","had","will have"],1],["If you heat ice, it ___.",["melts","melt","melted"],0],["I would travel more if I ___ rich.",["am","were","will be"],1]]},
+ {id:"g11",t:"Comparatives & Superlatives",ar:"المقارنة: صفة قصيرة + er + than، وصفة طويلة more + صفة + than. الأعلى: the + est أو the most.",
+  ex:["This cable is thicker than that one.","She is the best engineer in the team.","Revit is more useful than paper."],
+  q:[["This cable is ___ than that one.",["thick","thicker","thickest"],1],["She is the ___ engineer in the team.",["good","better","best"],2],["Revit is ___ useful than paper drawings.",["more","most","much"],0],["Today is ___ than yesterday.",["hot","hotter","hottest"],1]]}
+];
+const VOCAB=[
+["cable tray","حامل كابلات (كابل تراي)"],["conduit","ماسورة تمديدات كهربائية"],["circuit breaker","قاطع كهربائي"],
+["distribution board","لوحة توزيع"],["switchgear","لوحات مفاتيح الجهد"],["busbar","بسبار / قضيب توزيع"],
+["earthing","تأريض"],["voltage drop","هبوط الجهد"],["load calculation","حساب الأحمال"],
+["cable sizing","اختيار مقاس الكابل"],["transformer","محول"],["generator","مولد"],
+["lighting fixture","وحدة إنارة"],["junction box","علبة تفريع"],["fire alarm system","نظام إنذار الحريق"],
+["light current","التيار الخفيف"],["shop drawings","رسومات تنفيذية للموقع"],["as-built drawings","رسومات ما بعد التنفيذ"],
+["material approval","اعتماد خامات"],["method statement","بيان طريقة التنفيذ"],["bill of quantities (BOQ)","جدول الكميات"],
+["quantity take-off","حصر الكميات"],["variation order","أمر تغيير"],["snag list","قائمة العيوب"],
+["clash detection","كشف التعارضات"],["site inspection","معاينة الموقع"],["handover","تسليم المشروع"],
+["commissioning","التشغيل والاختبار"],["subcontractor","مقاول باطن"],["consultant","استشاري"],
+["deadline","الموعد النهائي"],["tender","مناقصة"],["insulation","عزل"],["short circuit","ماس كهربائي"],
+["overload","حمل زائد"],["residual current device (RCD)","قاطع تسريب أرضي"],["power factor","معامل القدرة"],
+["cable pulling","سحب الكابلات"],["scaffolding","سقالات"],["foreman","مشرف / أسطى"],
+["permit to work","تصريح عمل"],["lockout tagout","عزل وتعليم قبل الصيانة"],["RFI (request for information)","طلب استفسار"],
+["progress report","تقرير تقدم العمل"],["delay","تأخير"],["revision","تعديل / مراجعة"],
+["boarding pass","بطاقة صعود الطائرة"],["luggage","الأمتعة"],["customs","الجمارك"],["reservation","حجز"],
+["receipt","إيصال"],["prescription","روشتة"],["pharmacy","صيدلية"],["landlord","المالك"],["deposit","تأمين / عربون"],
+["refund","استرداد المبلغ"],["tip","بقشيش"],["appointment","موعد"],["embassy","سفارة"],["visa","تأشيرة"],
+["itinerary","برنامج الرحلة"],["direction","اتجاه"],["fare","أجرة المواصلات"],["delayed flight","رحلة متأخرة"],
+["emergency exit","مخرج طوارئ"],["lease","عقد إيجار"],["currency exchange","صرافة"]
+];
+const CARDS=[
+["What I mean is…","اللي أقصده إن…"],["As far as I know…","على حد علمي…"],["It's up to you.","القرار ليكي."],
+["I'll get back to you.","هرجعلك."],["Sorry for the delay.","آسفة على التأخير."],["That's a good point.","نقطة كويسة."],
+["Just to be clear…","عشان نكون واضحين…"],["Could you give me a hand?","ممكن تساعدني؟"],
+["We're behind schedule.","احنا متأخرين عن الجدول."],["Let's raise an RFI.","يلا نعمل طلب استفسار."],
+["The drawings need to be revised.","الرسومات محتاجة تعديل."],["Please share the latest revision.","من فضلك ابعتلي آخر ريفيجن."],
+["It doesn't comply with the specifications.","ده مش مطابق للمواصفات."],["We need your approval to proceed.","محتاجين موافقتك عشان نكمل."],
+["The work is 80% complete.","الشغل خلص 80%."],["It's within the allowed limit.","في الحدود المسموحة."],
+["Safety comes first.","السلامة أولاً."],["Let's walk the site together.","يلا نلف الموقع سوا."],
+["I'll coordinate with the other trades.","هنسق مع باقي التخصصات."],["Can you confirm the delivery date?","تقدر تأكد ميعاد التوريد؟"],
+["We found a discrepancy in the drawings.","لقينا اختلاف في الرسومات."],["I'll issue the updated drawings today.","هصدر الرسومات المحدثة النهاردة."],
+["Let's take it step by step.","نمشي خطوة خطوة."],["I'll do my best.","هبذل أقصى جهدي."],
+["Could you speak more slowly?","ممكن تتكلم أبطأ؟"],["I'm sorry, I didn't catch that.","آسفة مسمعتش كويس."],
+["Could you write it down for me?","ممكن تكتبهالي؟"],["How do you say this in English?","إزاي تقول ده بالإنجليزي؟"],
+["Where is the nearest station?","فين أقرب محطة؟"],["I'd like to book a table for two.","عايزة أحجز ترابيزة لشخصين."],
+["Can I have the bill, please?","ممكن الحساب لو سمحت؟"],["Is this seat taken?","المقعد ده محجوز؟"],
+["I'm just looking, thanks.","بتفرج بس، شكراً."],["Do you accept credit cards?","بتقبلوا كروت؟"],
+["I need to see a doctor.","محتاجة أروح لدكتور."],["I'm allergic to nuts.","عندي حساسية من المكسرات."],
+["Could you help me, please? I'm lost.","ممكن تساعدني؟ أنا تايهة."],["What time does it open?","بيفتح الساعة كام؟"],
+["Keep the change.","خلي الباقي."],["I'll have the same.","هاخد نفس الطلب."]
+];
+
+/* ================= LISTEN SUGGESTIONS ================= */
+const yt=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const LQ={airport:"english at the airport conversation",immig:"english passport control immigration questions",hotel:"english hotel check in conversation",rest:"english restaurant conversation ordering food",dir:"english asking for directions conversation",taxi:"english taxi conversation",pharm:"english at the pharmacy vocabulary",shop:"english shopping conversation",rent:"english renting an apartment conversation",sim:"english buying a sim card phone shop",small:"english small talk conversation",lost:"english travel emergency phrases",site:"english for construction site meetings",job:"english job interview questions and answers",
+ g1:"present simple english grammar lesson",g2:"present continuous english grammar lesson",g3:"past simple english grammar lesson",g4:"present perfect english grammar lesson",g5:"will vs going to english grammar",g6:"modal verbs english grammar lesson",g7:"wh questions english grammar lesson",g8:"articles a an the english grammar",g9:"prepositions in on at english grammar",g10:"conditionals english grammar lesson",g11:"comparatives and superlatives english grammar",daily:"english listening practice slow intermediate"};
+function listenHTML(id,title){
+  const q=LQ[id]||LQ.daily,a='class="b alt sm" style="text-decoration:none" target="_blank" rel="noopener"';
+  return `<div class="hint" style="margin-top:12px">🎧 <b>Now listen (5–10 min)</b> · ${title}
+   <div class="row" style="margin-top:8px">
+    <a ${a} href="${yt(q)}">▶ YouTube: ${q}</a>
+    <a ${a} href="https://www.bbc.co.uk/learningenglish/english/features/6-minute-english">🎙️ BBC 6 Minute English</a>
+    <a ${a} href="https://learningenglish.voanews.com/">🎙️ VOA Learning English</a>
+   </div>
+   <div class="mut" style="margin-top:6px">اسمعي من غير ما تترجمي، وبعدها كرري جملتين بصوت عالي (Shadowing). قنوات كويسة تدوري عليها: BBC Learning English، English with Lucy، Rachel's English، All Ears English.</div></div>`;
+}
+
+/* ================= STATE / XP ================= */
+const K='englishCoach.v3';
+/* ====== PASTE YOUR SUPABASE PROJECT VALUES HERE ====== */
+const SUPABASE_URL='https://iafwpbqivypgzfxykbme.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlhZndwYnFpdnlwZ3pmeHlrYm1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2MzY4MzIsImV4cCI6MjEwNzIxMjgzMn0.TP4urxi1kDZlZVyo0Td6dWWSxmcTL74B6YjKLoCB5-w';
+/* ===================================================== */
+let S={},_uid=null,_ready=false,_saveT=null,_sb=null;
+const defaults=()=>{S.days=S.days||{};S.cards=S.cards||{};S.xp=S.xp||0;S.dxp=S.dxp||{};S.m=S.m||{};S.dlg=S.dlg||{};S.gr=S.gr||{};
+S.start=S.start||Date.now();S.mist=S.mist||[];S.weak=S.weak||{};S.custom=S.custom||[]};
+defaults();
+async function pushState(){
+  if(!_ready||!_uid)return;
+  try{localStorage.setItem(K+'.'+_uid,JSON.stringify(S))}catch(e){}
+  try{const {error}=await _sb.from('progress').upsert({user_id:_uid,data:S,updated_at:new Date().toISOString()});if(error)throw error}
+  catch(e){toast('⚠️ مش قادر يحفظ أونلاين، متحفوظ على الجهاز')}
+}
+const save=()=>{S.upd=Date.now();clearTimeout(_saveT);_saveT=setTimeout(pushState,800)};
+const today=()=>new Date().toISOString().slice(0,10);
+const $=id=>document.getElementById(id);
+const lvlOf=x=>Math.floor(Math.sqrt(x/40))+1;
+const need=l=>40*l*l;
+function streak(){let n=0,d=new Date();while(S.days[d.toISOString().slice(0,10)]){n++;d.setDate(d.getDate()-1)}return n}
+function mis(){return S.m[today()]=S.m[today()]||{speak:0,shadow:0,quiz:0,dialogue:0,grammar:0,lab:0}}
+function render(){
+  const l=lvlOf(S.xp),lo=need(l-1),hi=need(l);
+  $('pLevel').textContent='Level '+l;$('pStreak').textContent='🔥 '+streak();
+  $('xpLbl').textContent=S.xp+' XP';
+  $('xpBar').style.width=Math.min(100,(S.xp-lo)/(hi-lo)*100)+'%';
+  const d=S.dxp[today()]||0;
+  $('goalLbl').textContent=d+' XP today';$('goalBar').style.width=Math.min(100,d)+'%';
+  const m=mis();
+  $('missions').innerHTML=[
+    ['🌍 Dialogue',m.dialogue>=1],['🎧 Shadow '+Math.min(m.shadow,5)+'/5',m.shadow>=5],['✍️ Grammar',m.grammar>=1],['🎙️ Speak',m.speak>=1],['⚡ Lab',(m.lab||0)>=1],['🎮 Quiz',m.quiz>=1]
+  ].map(([t,ok])=>`<span class="ms ${ok?'done':''}">${ok?'✅ ':''}${t}</span>`).join('');
+  renderToday();
+}
+let toastT;
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),1500)}
+function confetti(){const em=['⚡','🎉','⭐','🔌','💡','✨','✈️'];for(let i=0;i<30;i++){const s=document.createElement('span');s.className='cf';s.textContent=em[i%em.length];s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*.6+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),3200)}}
+function addXP(n,label){
+  const before=lvlOf(S.xp),dBefore=S.dxp[today()]||0;
+  S.xp+=n;S.dxp[today()]=dBefore+n;S.days[today()]=1;
+  save();render();toast('+'+n+' XP'+(label?' · '+label:''));
+  if(lvlOf(S.xp)>before){confetti();toast('🎉 Level '+lvlOf(S.xp)+'!')}
+  else if(dBefore<100&&S.dxp[today()]>=100){confetti();toast('🎯 Daily goal done!')}
+}
+function beep(ok){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=ok?880:220;g.gain.value=.08;o.start();o.stop(a.currentTime+(ok?.12:.25))}catch(e){}}
+
+/* ================= NAV ================= */
+function go(t){
+  document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  ['today','course','speak','shadow','grammar','dict','quiz','cards','ai','me','lab'].forEach(k=>$('t-'+k).classList.toggle('hide',k!==t));
+  labTok++;if(window._labStop)window._labStop();
+  if(t==='me')renderMe();
+  if(t==='ai'){aiInit();if(getKey()&&!chat.length)aiStart()}
+  speechSynthesis.cancel();closeDlg();
+}
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+
+/* ================= SPEECH ================= */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$('warn').classList.remove('hide');
+function mkUtter(text,rate){
+  const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=rate;
+  const vs=speechSynthesis.getVoices();
+  const v=vs.find(v=>/en-US/.test(v.lang)&&/Natural|Google|Aria|Jenny|Samantha/i.test(v.name))||vs.find(v=>v.lang==='en-US');
+  if(v)u.voice=v;return u;
+}
+function say(text,rate=0.9){speechSynthesis.cancel();speechSynthesis.speak(mkUtter(text,rate))}
+function sayThen(text,cb,rate=0.9){
+  speechSynthesis.cancel();const u=mkUtter(text,rate);let done=false;
+  const fin=()=>{if(!done){done=true;cb()}};
+  u.onend=fin;u.onerror=fin;setTimeout(fin,text.length*110+3000);speechSynthesis.speak(u);
+}
+function listen({onText,onEnd,continuous}){
+  const r=new SR();r.lang='en-US';r.interimResults=true;r.continuous=!!continuous;
+  let fin='';
+  r.onresult=e=>{let it='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=t+' ';else it+=t}onText(fin,it)};
+  r.onend=()=>onEnd(fin.trim());
+  r.onerror=e=>{if(e.error==='not-allowed')alert('اسمحي للمتصفح يستخدم الميكروفون.')};
+  r.start();return r;
+}
+const norm=s=>s.toLowerCase().replace(/[^a-z0-9' ]/g,'').split(/\s+/).filter(Boolean);
+function diff(target,said){
+  const T=norm(target),W=new Set(norm(said));let hit=0;
+  const html=T.map(w=>{if(W.has(w)){hit++;return `<span class="ok">${w}</span>`}return `<span class="no">${w}</span>`}).join(' ');
+  if(said&&said.trim()){T.forEach(w=>{if(W.has(w)){if(S.weak[w]){S.weak[w]--;if(S.weak[w]<=0)delete S.weak[w]}}else if(w.length>2)S.weak[w]=(S.weak[w]||0)+1});save()}
+  return {html,pct:T.length?Math.round(hit/T.length*100):0};
+}
+
+/* ================= TODAY ================= */
+const ROAD=[
+ ["Weeks 1–2","Survival English: airport, hotel, restaurant, directions, taxi"],
+ ["Weeks 3–4","Daily life: shopping, pharmacy, SIM, renting, small talk"],
+ ["Weeks 5–6","Work English: site meetings, RFIs, approvals, reports"],
+ ["Weeks 7–8","Grammar foundations: tenses, modals, questions"],
+ ["Weeks 9–10","Telling stories & giving opinions, longer speaking (60+ sec)"],
+ ["Weeks 11–12","Interviews, presentations, fluency without stopping"]
+];
+function weekNo(){return Math.min(12,Math.floor((Date.now()-S.start)/(7*864e5))+1)}
+function renderToday(){
+  if(!$('todayHead'))return;
+  const w=weekNo(),m=mis(),r=ROAD[Math.floor((w-1)/2)];
+  $('todayHead').textContent='Week '+w+' of 12 · Today\'s plan (~40 min)';
+  $('todayFocus').textContent='Focus: '+r[1];
+  const nextD=DIALOGUES.find(d=>!S.dlg[d.id]);
+  const nextG=GRAMMAR.find(g=>S.gr[g.id]==null);
+  const steps=[
+   ['🌍','Life Abroad: '+(nextD?nextD.t:'review any conversation in Hard mode'),m.dialogue>=1,'course','10 min'],
+   ['🎧','Shadowing: repeat 5 sentences',m.shadow>=5,'shadow','5 min'],
+   ['✍️','Grammar: '+(nextG?nextG.t:'redo any lesson'),m.grammar>=1,'grammar','5 min'],
+   ['🎙️','Speak 45 seconds on a scenario',m.speak>=1,'speak','5 min'],
+   ['⚡','Fluency Lab: 4-3-2 challenge',(m.lab||0)>=1,'lab','10 min'],
+   ['🎮','One quiz round',m.quiz>=1,'quiz','5 min']
+  ];
+  $('todayPlan').innerHTML=steps.map(s=>`<div class="step"><span style="font-size:22px">${s[2]?'✅':s[0]}</span><div style="flex:1"><b>${s[1]}</b><div class="mut">${s[4]}</div></div><button class="b alt sm" onclick="go('${s[3]}')">${s[2]?'Again':'Start'}</button></div>`).join('')+baseBanner()+listenHTML(nextD?nextD.id:'daily',nextD?nextD.t:'English listening');
+  $('roadmap').innerHTML=ROAD.map((x,i)=>`<div class="road ${i===Math.floor((w-1)/2)?'now':''}"><b>${x[0]}</b> · ${x[1]}</div>`).join('');
+}
+
+/* ================= LIFE ABROAD (dialogues) ================= */
+let D=null,dRec=null;
+function renderDlgList(){
+  $('dlgList').innerHTML=DIALOGUES.map((d,i)=>`<button class="item ${S.dlg[d.id]?'done':''}" onclick="openDlg(${i})">${S.dlg[d.id]?'✅ ':''}${d.t}<div class="mut">${d.ar}</div></button>`).join('');
+}
+function closeDlg(){
+  if(dRec){try{dRec.abort()}catch(e){}dRec=null}
+  D=null;$('dlgPlayer').classList.add('hide');$('dlgListWrap').classList.remove('hide');renderDlgList();
+}
+$('dlgBack').onclick=()=>{speechSynthesis.cancel();closeDlg()};
+function openDlg(i){
+  D={d:DIALOGUES[i],i:0,tries:0,tok:Date.now()};
+  $('dlgListWrap').classList.add('hide');$('dlgPlayer').classList.remove('hide');
+  $('dlgHard').checked=!!S.dlg[D.d.id];
+  $('dlgTitle').textContent=D.d.t;$('dlgChat').innerHTML='';$('dlgCtrl').innerHTML='';$('dlgMsg').textContent='';
+  stepD();
+}
+function bubble(cls,text){const b=document.createElement('div');b.className='bub '+cls;b.textContent=text;$('dlgChat').appendChild(b);b.scrollIntoView({block:'nearest'});return b}
+function stepD(){
+  if(!D)return;
+  $('dlgCtrl').innerHTML='';$('dlgMsg').textContent='';
+  if(D.i>=D.d.l.length){
+    const first=!S.dlg[D.d.id];S.dlg[D.d.id]=1;mis().dialogue++;save();
+    confetti();addXP(first?40:15,'Conversation complete');
+    $('dlgMsg').innerHTML='🎉 <b>Great job!</b> جربي تعيديها بـ Hard mode.'+listenHTML(D.d.id,D.d.t);
+    $('dlgCtrl').innerHTML='<button class="b" id="dAgain">Replay</button><button class="b alt" id="dList">All conversations</button>';
+    const idx=DIALOGUES.indexOf(D.d);
+    $('dAgain').onclick=()=>openDlg(idx);$('dList').onclick=closeDlg;return;
+  }
+  const [who,text]=D.d.l[D.i],tok=D.tok;
+  if(who==='T'){
+    bubble('t',text);$('dlgMsg').textContent='🔊 Listening…';
+    sayThen(text,()=>{if(D&&D.tok===tok){D.i++;stepD()}});
+  }else{
+    D.tries=0;
+    const hard=$('dlgHard').checked;
+    const b=bubble('y',hard?'🎤 Your turn — answer from memory':text);
+    $('dlgMsg').textContent='Your turn. اتكلمي!';
+    $('dlgCtrl').innerHTML='<button class="b" id="dMic">🎙️ Say it</button><button class="b alt" id="dHear">🔊 Hear it</button><button class="b alt" id="dShow">👁 Show</button><button class="b alt" id="dSkip">Skip ▶</button>';
+    $('dHear').onclick=()=>say(text);
+    $('dShow').onclick=()=>{b.textContent=text};
+    $('dSkip').onclick=()=>{if(dRec)dRec.abort();D.i++;stepD()};
+    $('dMic').onclick=()=>{
+      if(!SR)return;
+      if(dRec){dRec.stop();return}
+      $('dMic').textContent='⏹ Stop';$('dMic').classList.add('rec');
+      dRec=listen({continuous:false,onText:()=>{},onEnd:f=>{
+        dRec=null;if(!D||D.tok!==tok)return;
+        const el=$('dMic');if(el){el.textContent='🎙️ Say it';el.classList.remove('rec')}
+        const r=diff(text,f);b.textContent=text;
+        if(f&&r.pct>=60){
+          b.classList.add('good');addXP(5);beep(true);
+          $('dlgMsg').innerHTML=`${r.html}<br>✅ ${r.pct}%`;
+          setTimeout(()=>{if(D&&D.tok===tok){D.i++;stepD()}},1400);
+        }else{
+          D.tries++;beep(false);
+          $('dlgMsg').innerHTML=`${r.html}<br>🔁 ${r.pct}% — حاولي تاني ${D.tries>=2?'(أو Skip)':''}<br><span class="mut">You said: ${f||'(nothing)'}</span>`;
+        }
+      }});
+    };
+  }
+}
+renderDlgList();
+
+/* ================= SPEAK ================= */
+const POOLS={scn:SCENARIOS,int:INTERVIEW,trv:TRAVEL,free:FREE};
+const TAGS={scn:'🏗️ Site scenario',int:'💼 Interview',trv:'✈️ Travel situation',free:'💬 Free topic'};
+let pi=0;
+function showPrompt(){
+  const m=$('spMode').value,p=POOLS[m][pi%POOLS[m].length];
+  $('spTag').textContent=TAGS[m];$('prompt').textContent=p.q;$('spHint').textContent='💡 '+p.h;
+}
+$('spMode').onchange=()=>{pi=Math.floor(Math.random()*5);showPrompt()};
+$('newPrompt').onclick=()=>{pi++;showPrompt()};
+showPrompt();
+let rec=null,t0=0,tick=null;
+$('recBtn').onclick=()=>{
+  if(!SR)return;
+  if(rec){rec.stop();return}
+  $('transcript').textContent='Listening…';t0=Date.now();
+  tick=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);$('timer').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0')},500);
+  $('recBtn').textContent='⏹ Stop';$('recBtn').classList.add('rec');
+  rec=listen({continuous:true,
+    onText:(f,i)=>{$('transcript').innerHTML=(f+'<span class="mut">'+i+'</span>')||'Listening…'},
+    onEnd:f=>{
+      clearInterval(tick);rec=null;
+      $('recBtn').textContent='🎙️ Start speaking';$('recBtn').classList.remove('rec');
+      const secs=(Date.now()-t0)/1000;S.sec=(S.sec||0)+secs;
+      $('transcript').textContent=f||'(nothing recognized, try again)';
+      if(f){mis().speak++;addXP(secs>=45?40:secs>=20?25:10,secs>=45?'Great fluency!':'Keep going')}
+    }});
+};
+$('copyBtn').onclick=()=>{
+  const txt=`Please correct my English (I'm an electrical engineer in construction) and explain my mistakes briefly:\n\nQuestion: ${$('prompt').textContent}\n\nMy answer: ${$('transcript').textContent}`;
+  navigator.clipboard.writeText(txt).then(()=>{$('copyBtn').textContent='Copied ✓';setTimeout(()=>$('copyBtn').textContent='Copy for correction',1500)});
+};
+
+/* ---- grammar checker (LanguageTool free API) ---- */
+$('transcript').addEventListener('focus',()=>{if($('transcript').textContent.startsWith('Your words'))$('transcript').textContent=''});
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function checkGrammar(){
+  let txt=$('transcript').textContent.trim();
+  if(!txt||txt.startsWith('Your words')||txt.startsWith('Listening')){$('gcResult').textContent='اتكلمي الأول أو اكتبي نص.';return}
+  txt=txt.charAt(0).toUpperCase()+txt.slice(1);
+  if(!/[.!?]$/.test(txt))txt+='.';
+  $('gcResult').textContent='Checking…';
+  try{
+    const r=await fetch('https://api.languagetool.org/v2/check',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({text:txt,language:'en-US',disabledRules:'UPPERCASE_SENTENCE_START,COMMA_PARENTHESIS_WHITESPACE,WHITESPACE_RULE'})});
+    const j=await r.json(),ms=j.matches||[];
+    if(!ms.length){$('gcResult').innerHTML='✅ <b>No mistakes found!</b> (القواعد والإملاء سليمين)';addXP(10,'Clean text');return}
+    let fixed=txt;
+    [...ms].sort((a,b)=>b.offset-a.offset).forEach(m=>{const rep=m.replacements[0];if(rep)fixed=fixed.slice(0,m.offset)+rep.value+fixed.slice(m.offset+m.length)});
+    $('gcResult').innerHTML=`<b>Corrected version:</b><div class="box" style="min-height:0">${esc(fixed)}</div>`
+      +ms.map(m=>`<div class="hint">❌ <b>${esc(txt.substr(m.offset,m.length))}</b> → ${m.replacements.slice(0,3).map(x=>'<b>'+esc(x.value)+'</b>').join(' / ')||'?'}<br><span class="mut">${esc(m.message)}</span></div>`).join('')
+      +`<button class="b alt sm" onclick="say(this.dataset.t)" data-t="${esc(fixed)}">🔊 Hear the corrected version</button> <span class="mut">اقريها بصوت عالي مرتين.</span>`;
+    ms.forEach(m=>{const w=txt.substr(m.offset,m.length),f=(m.replacements[0]||{}).value||'';if(!S.mist.some(x=>x.w===w&&x.f===f))S.mist.push({w,f,m:m.message})});
+    if(S.mist.length>150)S.mist=S.mist.slice(-150);
+    addXP(5,'Checked');
+  }catch(e){$('gcResult').textContent='مفيش اتصال بالإنترنت أو الخدمة مشغولة. جربي بعد شوية.'}
+}
+$('gcBtn').onclick=checkGrammar;
+
+/* ================= SHADOWING ================= */
+let si=0;
+const lvl=()=>SHADOW[+$('shLevel').value];
+function showShadow(){const [e,a]=lvl()[si%lvl().length];$('shText').textContent=e;$('shAr').textContent=a;$('shResult').textContent='Listen first, then repeat the sentence out loud.'}
+$('shLevel').onchange=()=>{si=0;showShadow()};
+$('shNext').onclick=()=>{si++;showShadow()};
+$('shPlay').onclick=()=>say($('shText').textContent,+$('shRate').value);
+let shr=null;
+$('shRec').onclick=()=>{
+  if(!SR)return;
+  if(shr){shr.stop();return}
+  $('shRec').textContent='⏹ Stop';$('shResult').textContent='Listening…';
+  shr=listen({continuous:false,onText:()=>{},onEnd:f=>{
+    shr=null;$('shRec').textContent='🎙️ Repeat it';
+    const r=diff($('shText').textContent,f),pct=r.pct;
+    $('shResult').innerHTML=`${r.html}<br><br><b>${pct}%</b> ${pct>=85?'🎉 Excellent!':pct>=60?'👍 Good, try again':'💪 Listen again and repeat slowly'}<br><span class="mut">You said: ${f||'(nothing)'}</span>`;
+    if(f){mis().shadow++;addXP(Math.max(2,Math.round(pct/10))+(pct>=85?5:0))}
+    if(pct>=85)setTimeout(()=>{si++;showShadow()},2200);
+  }});
+};
+showShadow();
+
+/* ================= GRAMMAR ================= */
+let G=null;
+function renderGrList(){
+  $('grItems').innerHTML=GRAMMAR.map((g,i)=>`<button class="item ${S.gr[g.id]!=null?'done':''}" onclick="openGr(${i})">${S.gr[g.id]!=null?'✅ ':''}${i+1}. ${g.t}${S.gr[g.id]!=null?`<div class="mut">Best: ${S.gr[g.id]}/4</div>`:''}</button>`).join('');
+}
+function openGr(i){G={i,qi:0,score:0};$('grList').classList.add('hide');$('grPlay').classList.remove('hide');renderGr()}
+function closeGr(){G=null;$('grPlay').classList.add('hide');$('grList').classList.remove('hide');renderGrList()}
+function renderGr(){
+  const g=GRAMMAR[G.i];
+  let h=`<div class="row" style="justify-content:space-between"><h2>${g.t}</h2><button class="b alt sm" onclick="closeGr()">← Back</button></div>
+   <div class="ar">${g.ar}</div>
+   <div style="margin:10px 0">${g.ex.map(e=>`<div class="row" style="margin:4px 0"><button class="b alt sm" onclick="say(this.dataset.t)" data-t="${e.replace(/"/g,'&quot;')}">🔊</button> ${e}</div>`).join('')}</div><hr style="border:0;border-top:1px solid var(--line)">`;
+  if(G.qi>=g.q.length){
+    const first=S.gr[g.id]==null;
+    if(first||G.score>S.gr[g.id])S.gr[g.id]=G.score;
+    mis().grammar++;save();
+    addXP(G.score*5+(first?10:0),'Grammar');if(G.score===4)confetti();
+    h+=`<div class="big">${G.score===4?'🏆 Perfect!':G.score>=3?'👏 Great!':'💪 Review the rule and retry'} ${G.score}/4</div>
+     <div class="row"><button class="b" onclick="openGr(${G.i})">Retry</button>${G.i<GRAMMAR.length-1?`<button class="b alt" onclick="openGr(${G.i+1})">Next lesson ▶</button>`:''}</div>`;
+    $('grPlay').innerHTML=h+listenHTML(g.id,g.t);return;
+  }
+  const [q,o,a]=g.q[G.qi];
+  h+=`<div class="mut" style="margin-top:10px">Question ${G.qi+1}/4</div><div class="big">${q}</div>
+   <div class="opts">${o.map((x,k)=>`<button class="opt" data-k="${k}">${x}</button>`).join('')}</div>`;
+  $('grPlay').innerHTML=h;
+  document.querySelectorAll('#grPlay .opt').forEach(b=>b.onclick=()=>{
+    const ok=+b.dataset.k===a;
+    document.querySelectorAll('#grPlay .opt').forEach(x=>{x.disabled=true;if(+x.dataset.k===a)x.classList.add('right')});
+    if(ok){G.score++;beep(true);say(q.replace('___',o[a]))}else{b.classList.add('wrong');beep(false)}
+    setTimeout(()=>{G.qi++;renderGr()},ok?1700:1900);
+  });
+}
+renderGrList();
+
+/* ================= DICTATION ================= */
+const DPOOL=[...new Set(SHADOW.flat().map(x=>x[0]).concat(DIALOGUES.flatMap(d=>d.l.map(x=>x[1]))))];
+let dc=Math.floor(Math.random()*DPOOL.length);
+function dcShow(){$('dcInput').value='';$('dcResult').textContent='—';setTimeout(()=>say(DPOOL[dc],.85),200)}
+$('dcPlay').onclick=()=>say(DPOOL[dc],.9);
+$('dcSlow').onclick=()=>say(DPOOL[dc],.6);
+$('dcNext').onclick=()=>{dc=Math.floor(Math.random()*DPOOL.length);dcShow()};
+$('dcCheck').onclick=()=>{
+  const t=DPOOL[dc],r=diff(t,$('dcInput').value);
+  $('dcResult').innerHTML=`${r.html}<br><br><b>${r.pct}%</b><br><span class="mut">Correct: ${t}</span>`;
+  addXP(r.pct>=90?10:r.pct>=60?5:2);
+};
+
+/* ================= QUIZ ================= */
+let Q=null;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+$('qStart').onclick=startQuiz;
+function startQuiz(){Q={list:shuffle(VOCAB).slice(0,10),i:0,lives:3,score:0,combo:0};nextQ()}
+function hearts(){$('qLives').textContent='❤️'.repeat(Q.lives)+'🖤'.repeat(3-Q.lives)}
+function nextQ(){
+  hearts();
+  if(Q.i>=Q.list.length||Q.lives<=0)return endQuiz();
+  const [en,ar]=Q.list[Q.i];
+  const dir=Math.random()<.5?'en2ar':'ar2en';
+  const wrong=shuffle(VOCAB.filter(v=>v[0]!==en)).slice(0,3);
+  const opts=shuffle([[en,ar],...wrong]);
+  const qText=dir==='en2ar'?en:ar;
+  $('qBody').innerHTML=`<div class="mut">Question ${Q.i+1}/10 ${Q.combo>1?'· 🔥 combo x'+Q.combo:''}</div>
+    <div class="big" ${dir==='ar2en'?'style="direction:rtl"':''}>${qText} ${dir==='en2ar'?'<button class="b alt sm" id="qSay">🔊</button>':''}</div>
+    <div class="opts">${opts.map((o,k)=>`<button class="opt" data-k="${k}">${dir==='en2ar'?o[1]:o[0]}</button>`).join('')}</div>`;
+  if(dir==='en2ar'){say(en,.85);$('qSay').onclick=()=>say(en,.85)}
+  document.querySelectorAll('#qBody .opt').forEach(b=>b.onclick=()=>{
+    const ok=opts[+b.dataset.k][0]===en;
+    document.querySelectorAll('#qBody .opt').forEach(x=>{x.disabled=true;if(opts[+x.dataset.k][0]===en)x.classList.add('right')});
+    if(ok){Q.score++;Q.combo++;beep(true);addXP(10+(Q.combo>2?5:0))}
+    else{b.classList.add('wrong');Q.combo=0;Q.lives--;beep(false);hearts()}
+    Q.i++;setTimeout(nextQ,ok?700:1500);
+  });
+}
+function endQuiz(){
+  mis().quiz++;save();
+  const win=Q.score>=8;
+  if(win){confetti();addXP(20,'Quiz bonus')}else render();
+  $('qBody').innerHTML=`<div class="big">${win?'🏆 ممتاز!':Q.lives<=0?'😅 خلصت القلوب':'👏 كويس!'} Score: ${Q.score}/10</div><button class="b" id="qAgain">Play again</button>`;
+  $('qAgain').onclick=startQuiz;
+}
+
+/* ================= FLASHCARDS ================= */
+const allCards=()=>CARDS.concat(VOCAB,S.custom,Object.entries(S.weak).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([w])=>[w,'كلمة محتاجة تدريب 🔁 اسمعيها وكرريها']));
+const DAY=864e5,INT=[0,1,3,7,14,30];
+let cur=null;
+function pickCard(){
+  const now=Date.now();
+  const due=allCards().map(c=>({i:c[0],c,s:S.cards[c[0]]||{box:0,due:0}})).filter(x=>x.s.due<=now);
+  due.sort((a,b)=>a.s.box-b.s.box||Math.random()-.5);
+  return due[0]||null;
+}
+function showCard(){
+  cur=pickCard();
+  const learned=Object.values(S.cards).filter(s=>s.box>=3).length;
+  $('cardInfo').textContent=`${learned}/${allCards().length} learned`;
+  if(!cur){$('cardFront').textContent='خلصتي كل كروت النهاردة 🎉';$('cardBack').textContent='ارجعي بكرة للمراجعة.';return}
+  $('cardFront').textContent=cur.c[0];$('cardBack').textContent='';
+}
+$('cardShow').onclick=()=>{if(cur)$('cardBack').textContent=cur.c[1]};
+$('cardSay').onclick=()=>{if(cur)say(cur.c[0],.85)};
+function grade(ok){
+  if(!cur)return;
+  const s=S.cards[cur.i]||{box:0,due:0};
+  s.box=ok?Math.min(s.box+1,5):0;
+  s.due=Date.now()+(ok?INT[s.box]*DAY:60*1000);
+  S.cards[cur.i]=s;
+  if(ok)addXP(3);else save();
+  showCard();
+}
+$('cardKnow').onclick=()=>grade(true);
+$('cardNo').onclick=()=>grade(false);
+/* ================= CUSTOM CARDS ================= */
+$('t-cards').insertAdjacentHTML('beforeend',`<div class="card"><h2>➕ Add your own phrase</h2>
+ <div class="row"><input id="cuEn" placeholder="English" style="flex:1;min-width:160px"><input id="cuAr" placeholder="المعنى بالعربي" style="flex:1;min-width:160px"><button class="b" id="cuAdd">Add</button></div>
+ <div class="mut" style="margin-top:6px">أي كلمة أو جملة تقابلك في الشغل أو الشارع، ضيفيها وهتظهرلك في المراجعة.</div></div>`);
+$('cuAdd').onclick=()=>{const e=$('cuEn').value.trim(),a=$('cuAr').value.trim();if(!e)return;S.custom.push([e,a||'—']);save();$('cuEn').value='';$('cuAr').value='';toast('Added ✓');showCard()};
+
+/* ================= CLAUDE API (optional) ================= */
+const KEYN='englishCoach.apikey';
+const getKey=()=>localStorage.getItem(KEYN)||'';
+async function claude(system,messages,max=400){
+  const key=getKey();if(!key)throw new Error('NOKEY');
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+    headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-haiku-5-5',max_tokens:max,system,messages})});
+  const j=await r.json();
+  if(!r.ok)throw new Error((j.error&&j.error.message)||'API error');
+  return j.content.map(c=>c.text||'').join('');
+}
+function keyHTML(){
+  const has=!!getKey();
+  const inner=`<div class="mut">1) افتحي console.anthropic.com وسجلي، 2) من API Keys اعملي key جديد، 3) الصقيه هنا. بيتحفظ على جهازك بس، والاستخدام بيتحاسب بقروش.</div>
+   <div class="row" style="margin-top:8px"><input type="password" id="keyIn" placeholder="sk-ant-…" style="flex:1;min-width:200px"><button class="b sm" id="keySave">Save</button>${has?'<button class="b alt sm" id="keyDel">Remove</button>':''}</div>`;
+  return has?`<details><summary>🔑 API key saved (change)</summary>${inner}</details>`:`<div class="hint">🔑 <b>محتاجة API key عشان تشغلي الميزة دي</b><br>${inner}</div>`;
+}
+const MODES={
+ free:"Free conversation about daily life, work, hobbies and plans.",
+ interview:"You are an interviewer at an international engineering/BIM company interviewing the learner for an electrical BIM engineer position. Ask one question at a time.",
+ site:"You are an English-speaking project manager on a construction site. Discuss electrical works status, delays, clashes, approvals and drawings with the learner.",
+ travel:"Role-play real-life situations abroad (hotel, restaurant, taxi, pharmacy, renting). Start a situation yourself and play the other person."
+};
+let chat=[];
+const aiSystem=()=>`You are a warm, patient English conversation partner for an Egyptian electrical BIM engineer working in construction, who understands English but struggles to speak fluently. ${MODES[$('aiMode').value]} Rules: reply in simple natural English, maximum 2 short sentences, and end with one question to keep the conversation going. If the learner's last message contains grammar or word-choice mistakes, add a new line at the very end starting with "FIX:" followed by the corrected sentence and a very short explanation in Egyptian Arabic. If there are no mistakes, do not add a FIX line.`;
+function aiInit(){
+  $('aiKeyBox').innerHTML=keyHTML();
+  $('aiMain').classList.toggle('hide',!getKey());
+  $('keySave').onclick=()=>{const v=$('keyIn').value.trim();if(v){localStorage.setItem(KEYN,v);toast('Saved ✓');aiInit();if(!chat.length)aiStart()}};
+  if($('keyDel'))$('keyDel').onclick=()=>{localStorage.removeItem(KEYN);aiInit()};
+}
+function aiBubble(cls,text){const b=document.createElement('div');b.className='bub '+cls;b.textContent=text;$('aiChat').appendChild(b);$('aiChat').scrollTop=1e9;return b}
+async function aiStart(){
+  $('aiChat').innerHTML='';chat=[{role:'user',content:"Hi! Let's start."}];
+  const w=aiBubble('t','…');
+  try{const out=await claude(aiSystem(),chat,200);const t=out.split(/\n?FIX:/)[0].trim();w.textContent=t;chat.push({role:'assistant',content:out});if($('aiSpeak').checked)say(t,.95)}
+  catch(e){w.textContent='⚠️ '+e.message;chat=[]}
+}
+async function aiSendMsg(text){
+  text=(text||'').trim();if(!text||!chat.length)return;
+  aiBubble('y',text);chat.push({role:'user',content:text});$('aiIn').value='';
+  const w=aiBubble('t','…');
+  try{
+    const out=await claude(aiSystem(),chat,300);
+    const [t,...fx]=out.split(/\n?FIX:/);
+    w.textContent=t.trim();chat.push({role:'assistant',content:out});
+    if(fx.length){const h=document.createElement('div');h.className='hint';h.textContent='✏️ '+fx.join(' ').trim();$('aiChat').appendChild(h)}
+    $('aiChat').scrollTop=1e9;addXP(8);
+    if($('aiSpeak').checked)say(t.trim(),.95);
+  }catch(e){w.textContent='⚠️ '+e.message;chat.pop()}
+}
+$('aiSend').onclick=()=>aiSendMsg($('aiIn').value);
+$('aiIn').addEventListener('keydown',e=>{if(e.key==='Enter')aiSendMsg($('aiIn').value)});
+$('aiNew').onclick=aiStart;$('aiMode').onchange=aiStart;
+let aiRec=null;
+$('aiMic').onclick=()=>{
+  if(!SR)return;
+  if(aiRec){aiRec.stop();return}
+  speechSynthesis.cancel();
+  $('aiMic').textContent='⏹ Stop';$('aiMic').classList.add('rec');
+  aiRec=listen({continuous:false,onText:(f,i)=>{$('aiIn').value=f+i},onEnd:f=>{
+    aiRec=null;$('aiMic').textContent='🎙️ Speak';$('aiMic').classList.remove('rec');
+    if(f)aiSendMsg(f);
+  }});
+};
+$('aiEnd').onclick=async()=>{
+  if(chat.length<3){toast('Talk a bit first');return}
+  const w=aiBubble('t','Preparing feedback…');
+  try{
+    const out=await claude("You are an English coach. Answer in Egyptian Arabic mixed with English examples.",[...chat,{role:'user',content:"Stop the role-play. Review MY messages in this conversation: list my top 3 recurring mistakes with corrections, 3 more natural phrases I could have used, and one tip. Be concise."}],700);
+    w.textContent=out;addXP(20,'Feedback');
+  }catch(e){w.textContent='⚠️ '+e.message}
+};
+$('aiFbBtn').onclick=async()=>{
+  const txt=$('transcript').textContent.trim();
+  if(!txt||txt.startsWith('Your words')){toast('اتكلمي الأول');return}
+  if(!getKey()){toast('ضيفي API key من تبويب AI Partner');return}
+  const box=$('aiFb');box.classList.remove('hide');box.textContent='Thinking…';
+  try{
+    box.textContent=await claude("You are an expert English coach for an Egyptian electrical BIM engineer. Respond in Egyptian Arabic mixed with English.",[{role:'user',content:`Question: ${$('prompt').textContent}\nMy spoken answer (speech-to-text, ignore punctuation and capitalization): ${txt}\n\nGive: 1) a corrected, more natural version; 2) my main mistakes explained briefly; 3) a fluency score out of 10 and one tip.`}],700);
+    addXP(10,'AI feedback');
+  }catch(e){box.textContent='⚠️ '+e.message}
+};
+
+/* ================= FLUENCY LAB ================= */
+let labTok=0;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const RAPID=["What's your name and where are you from?","What do you do for work?","What did you do yesterday?","What are you doing this weekend?","Why did you choose electrical engineering?","Describe your best friend.","What's your favorite food?","How do you get to work every day?","What is the hardest part of your job?","Tell me about your last project.","What would you do with a free day?","What do you like about your city?","Where would you like to travel, and why?","How was your day?","What is your biggest goal this year?","Can you recommend a good restaurant?","What would you do if a client was angry?","How do you learn new software?","What do you do to relax?","Have you ever been abroad? Tell me about it.","What are your strengths at work?","How do you organize your tasks?"];
+function metrics(text,secs){const w=norm(text);return{words:w.length,wpm:secs>5?Math.round(w.length/secs*60):0,uniq:new Set(w).size}}
+function addWpm(mode,m){if(!m.wpm)return;S.wpm=S.wpm||[];S.wpm.push({d:today(),wpm:m.wpm,mode});if(S.wpm.length>200)S.wpm=S.wpm.slice(-200)}
+function labSpeak(sec,el){
+  return new Promise(res=>{
+    let left=sec,acc='',stopped=false,r=null;const t0=Date.now();
+    el.innerHTML=`<div class="big" id="labT">${sec}s</div><div class="box" id="labTx">🎙️ Listening…</div><button class="b alt sm" id="labStop">Stop early</button>`;
+    const halt=()=>{stopped=true;try{r.stop()}catch(e){}};
+    window._labStop=halt;
+    const tick=setInterval(()=>{left--;const e=$('labT');if(e)e.textContent=left+'s';if(left<=0)halt()},1000);
+    const show=(f,i)=>{const e=$('labTx');if(e)e.innerHTML=esc((acc+' '+f).trim())+'<span class="mut"> '+esc(i)+'</span>'};
+    const startRec=()=>{
+      const s=Date.now();
+      r=listen({continuous:true,onText:show,onEnd:f=>{
+        acc=(acc+' '+f).trim();
+        if(Date.now()-s<700)stopped=true;
+        if(!stopped&&left>0)startRec();
+        else{clearInterval(tick);window._labStop=null;res({text:acc,secs:Math.max(1,Math.min(sec,(Date.now()-t0)/1000))})}
+      }});
+    };
+    const sb=$('labStop');if(sb)sb.onclick=halt;
+    startRec();
+  });
+}
+function labBtn(label){return new Promise(r=>{const b=document.createElement('button');b.className='b';b.style.marginTop='10px';b.textContent=label;b.onclick=()=>{b.remove();r()};$('labBody').appendChild(b)})}
+async function ltErrors(text){
+  try{
+    let t=text.charAt(0).toUpperCase()+text.slice(1);if(!/[.!?]$/.test(t))t+='.';
+    const r=await fetch('https://api.languagetool.org/v2/check',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({text:t,language:'en-US',disabledRules:'UPPERCASE_SENTENCE_START,COMMA_PARENTHESIS_WHITESPACE,WHITESPACE_RULE'})});
+    const j=await r.json();return (j.matches||[]).length;
+  }catch(e){return null}
+}
+async function run432(tok){
+  const topic=pick(FREE.concat(SCENARIOS,TRAVEL)).q,res=[];
+  for(const [k,sec] of [120,90,60].entries()){
+    $('labBody').innerHTML=`<div class="tag">Round ${k+1}/3 · ${sec} seconds</div><div class="big">${esc(topic)}</div><div class="hint">${k?'نفس الموضوع ونفس الأفكار، بس أسرع وأوضح وبوقت أقل.':'اتكلمي من غير ما تقفي. لو نسيتي كلمة اشرحيها بكلمات تانية.'}</div>`;
+    await labBtn('🎙️ Go');if(tok!==labTok)return;
+    const r=await labSpeak(sec,$('labBody'));if(tok!==labTok)return;
+    const m=metrics(r.text,r.secs);res.push(m);S.sec=(S.sec||0)+r.secs;addWpm('432',m);
+    $('labBody').innerHTML=`<div class="big">Round ${k+1} ✔</div><div class="list"><div class="item">🗣 ${m.words} words</div><div class="item">⚡ ${m.wpm} WPM</div><div class="item">🔤 ${m.uniq} unique words</div></div>`;
+    if(k<2){await labBtn('Next round ▶');if(tok!==labTok)return}
+  }
+  const up=res[2].wpm>res[0].wpm;
+  mis().lab=(mis().lab||0)+1;
+  if(up)confetti();
+  addXP(30+(up?20:0),'4-3-2 done');
+  $('labBody').innerHTML=`<div class="big">${up?'🏆 سرعتك زادت!':'👏 كويس، كرري تاني'}</div>
+   <div class="list">${res.map((m,i)=>`<div class="item">Round ${i+1}: <b>${m.wpm}</b> WPM · ${m.words} words</div>`).join('')}</div>
+   <div class="mut" style="margin-top:8px">لما بتكرري نفس الموضوع مخك بيبني جمل جاهزة، وده أسرع طريق للكلام التلقائي.</div>`;
+}
+async function runRapid(tok){
+  const qs=shuffle(RAPID).slice(0,8);let good=0,tw=0,ts=0;
+  for(const [i,q] of qs.entries()){
+    $('labBody').innerHTML=`<div class="tag">Question ${i+1}/8</div><div class="big">${esc(q)}</div><div class="mut">🔊 …</div>`;
+    await new Promise(r=>sayThen(q,r,1));if(tok!==labTok)return;
+    const r=await labSpeak(15,$('labBody'));if(tok!==labTok)return;
+    const m=metrics(r.text,r.secs);tw+=m.words;ts+=r.secs;S.sec=(S.sec||0)+r.secs;if(m.words>=8)good++;
+    $('labBody').innerHTML=`<div class="big">${m.words>=8?'✅':'⚠️'} ${m.words} words</div><div class="box" style="min-height:0">${esc(r.text)||'(nothing)'}</div>`;
+    await sleep(1500);if(tok!==labTok)return;
+  }
+  addWpm('rapid',{wpm:ts>5?Math.round(tw/ts*60):0});
+  mis().lab=(mis().lab||0)+1;
+  if(good>=6)confetti();
+  addXP(good*5+10,'Rapid fire');
+  $('labBody').innerHTML=`<div class="big">${good}/8 إجابات كاملة</div><div class="mut">الهدف: 8 كلمات أو أكتر لكل إجابة (جملتين). كرريها لحد ما توصلي 8/8.</div>`;
+}
+async function runBase(tok){
+  $('labBody').innerHTML=`<div class="big">Introduce yourself, and talk about your work and your goals.</div><div class="hint">60 ثانية من غير توقف. ده قياس مستواك الحالي، وهنقارن بيه كل أسبوعين.</div>`;
+  await labBtn('🎙️ Start');if(tok!==labTok)return;
+  const r=await labSpeak(60,$('labBody'));if(tok!==labTok)return;
+  const m=metrics(r.text,r.secs);
+  $('labBody').textContent='Analyzing…';
+  const e=r.text?await ltErrors(r.text):null;if(tok!==labTok)return;
+  const err=(e==null||!m.words)?null:Math.round(e/m.words*1000)/10;
+  S.base=S.base||[];S.base.push({d:today(),wpm:m.wpm,uniq:m.uniq,words:m.words,err});
+  S.sec=(S.sec||0)+r.secs;addWpm('base',m);mis().lab=(mis().lab||0)+1;
+  const f=S.base[0];
+  addXP(30,'Baseline saved');
+  $('labBody').innerHTML=`<div class="big">📏 Result</div>
+   <div class="list"><div class="item">⚡ ${m.wpm} WPM</div><div class="item">🗣 ${m.words} words</div><div class="item">🔤 ${m.uniq} unique words</div><div class="item">❌ ${err==null?'—':err} errors / 100 words</div></div>
+   ${S.base.length>1?`<div class="hint">First test: ${f.wpm} WPM · ${f.uniq} unique words${f.err!=null?' · '+f.err+' errors/100':''}</div>`:'<div class="hint">ده أول قياس. اعيديه بعد أسبوعين.</div>'}
+   <div class="mut">القياس تقريبي (مبني على تحويل الصوت لنص)، بس مفيد للمقارنة مع نفسك.</div>`;
+}
+async function runFix(tok){
+  const items=shuffle(S.mist.filter(x=>x.f)).slice(0,5);
+  if(!items.length){$('labBody').innerHTML='<div class="hint">مفيش غلطات مسجلة لسه. استخدمي ✅ Check my grammar في تبويب Speak الأول.</div>';return}
+  let ok=0;
+  for(const [i,x] of items.entries()){
+    $('labBody').innerHTML=`<div class="tag">${i+1}/${items.length}</div><div class="big">❌ ${esc(x.w)}</div><div class="mut">${esc(x.m)}</div><div class="hint">قولي جملة فيها الصياغة الصح (8 ثواني).</div>`;
+    await labBtn('🎙️ Say it correctly');if(tok!==labTok)return;
+    const r=await labSpeak(8,$('labBody'));if(tok!==labTok)return;
+    const good=norm(r.text).join(' ').includes(norm(x.f).join(' '));if(good)ok++;
+    $('labBody').innerHTML=`<div class="big">${good?'✅ صح!':'❌ الصح:'} <b>${esc(x.f)}</b></div><div class="box" style="min-height:0">${esc(r.text)||'(nothing)'}</div>`;
+    await sleep(1800);if(tok!==labTok)return;
+  }
+  mis().lab=(mis().lab||0)+1;addXP(ok*6+5,'Mistakes drill');
+  $('labBody').innerHTML=`<div class="big">${ok}/${items.length}</div><div class="mut">الغلطة اللي بتتصحح بالصوت بتتثبت أسرع من اللي بتقريها بس.</div>`;
+}
+$('labStart').onclick=()=>{
+  if(!SR){$('labBody').innerHTML='<div class="hint">محتاجة Chrome أو Edge.</div>';return}
+  const tok=++labTok;if(window._labStop)window._labStop();
+  ({'432':run432,rapid:runRapid,base:runBase,fix:runFix})[$('labMode').value](tok);
+};
+function baseBanner(){
+  const b=S.base||[];
+  const btn='<br><button class="b sm" style="margin-top:6px" onclick="go(\'lab\')">Open Fluency Lab</button>';
+  if(!b.length)return `<div class="hint">📏 اعملي <b>Baseline test</b> النهاردة (دقيقة واحدة). هنقارن بيه تقدمك بعد أسبوعين.${btn}</div>`;
+  const days=Math.floor((Date.now()-new Date(b[b.length-1].d).getTime())/864e5);
+  return days>=14?`<div class="hint">📏 عدى ${days} يوم على آخر قياس. اعملي Baseline جديد وشوفي تقدمك.${btn}</div>`:'';
+}
+function fluencyCard(){
+  const w=(S.wpm||[]).slice(-12),mx=Math.max(100,...w.map(x=>x.wpm));
+  const b=S.base||[];
+  return `<div class="card"><h2>🗣 Fluency metrics</h2>
+   <div class="mut">وقت الكلام الفعلي: <b>${Math.round((S.sec||0)/60)} دقيقة</b> · الطلاقة المريحة حوالي 100–130 كلمة/دقيقة (الناطق الأصلي حوالي 150).</div>
+   ${w.length?`<div style="display:flex;gap:4px;align-items:flex-end;height:90px;margin:10px 0">${w.map(x=>`<div style="flex:1;text-align:center" title="${x.d}"><div style="height:${Math.round(x.wpm/mx*70)}px;background:var(--ok);border-radius:4px 4px 0 0;min-height:2px"></div><div class="mut" style="font-size:10px">${x.wpm}</div></div>`).join('')}</div>`:'<div class="mut" style="margin:8px 0">اعملي أول تمرين في Fluency Lab عشان يبان الرسم.</div>'}
+   ${b.length?`<div class="list">${b.map((x,i)=>`<div class="item">${i===0?'🏁 First':'📏 '+x.d}: <b>${x.wpm}</b> WPM · ${x.uniq} unique${x.err!=null?' · '+x.err+' err/100':''}</div>`).join('')}</div>`:''}
+  </div>`;
+}
+
+/* ================= MY PROGRESS ================= */
+function renderMe(){
+  const days=Object.keys(S.days).length;
+  const learned=Object.values(S.cards).filter(s=>s.box>=3).length;
+  const last7=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-6+i);const k=d.toISOString().slice(0,10);return [k.slice(5),S.dxp[k]||0]});
+  const mx=Math.max(100,...last7.map(x=>x[1]));
+  const weak=Object.entries(S.weak).sort((a,b)=>b[1]-a[1]).slice(0,14);
+  $('meBody').innerHTML=`
+  <div class="card"><h2>📊 Your progress</h2>
+   <div class="list">
+    <div class="item">⭐ Level ${lvlOf(S.xp)} · ${S.xp} XP</div>
+    <div class="item">🔥 Streak: ${streak()} days · Active days: ${days}</div>
+    <div class="item">🌍 Conversations: ${Object.keys(S.dlg).length}/${DIALOGUES.length}</div>
+    <div class="item">✍️ Grammar: ${Object.keys(S.gr).length}/${GRAMMAR.length}</div>
+    <div class="item">🃏 Phrases learned: ${learned}</div>
+    <div class="item">📅 Week ${weekNo()} of 12</div>
+   </div>
+   <h2 style="margin-top:16px">Last 7 days (XP)</h2>
+   <div style="display:flex;gap:8px;align-items:flex-end;height:120px">${last7.map(([d,v])=>`<div style="flex:1;text-align:center"><div style="height:${Math.round(v/mx*80)}px;background:var(--pri);border-radius:6px 6px 0 0;min-height:2px"></div><div class="mut">${d}</div><div class="mut">${v}</div></div>`).join('')}</div>
+  </div>
+  ${fluencyCard()}
+  <div class="card"><h2>📓 Mistake notebook</h2>
+   ${S.mist.length?S.mist.slice(-15).reverse().map(m=>`<div class="hint">❌ <b>${esc(m.w)}</b> → ✅ <b>${esc(m.f)}</b><br><span class="mut">${esc(m.m)}</span></div>`).join(''):'<div class="mut">لسه مفيش. استخدمي Check my grammar في تبويب Speak وغلطاتك هتتسجل هنا تلقائي.</div>'}
+  </div>
+  <div class="card"><h2>🎯 Words to practice</h2>
+   <div class="mut" style="margin-bottom:8px">الكلمات اللي بتغلطي فيها أو بتنساها، بتتسجل تلقائي وبتظهر في كروت Phrases. لما تنطقيها صح بتختفي.</div>
+   ${weak.length?weak.map(([w,n])=>`<button class="b alt sm" style="margin:3px" data-w="${esc(w)}" onclick="say(this.dataset.w,.7)">🔊 ${esc(w)} <span class="mut">×${n}</span></button>`).join(''):'<div class="mut">لسه مفيش.</div>'}
+  </div>
+  <div class="card"><h2>💾 Backup</h2>
+   <div class="mut" style="margin-bottom:8px">التقدم محفوظ على حسابك وبيظهر من أي جهاز. Import بتنقلي بيه نسخة قديمة.</div>
+   <div class="row"><button class="b" id="bkExport">Export</button><button class="b alt" id="bkImport">Import</button><input type="file" id="bkFile" accept=".json" class="hide"></div>
+  </div>`;
+  $('bkExport').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));a.download='english-coach-backup.json';a.click()};
+  $('bkImport').onclick=()=>$('bkFile').click();
+  $('bkFile').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{S=JSON.parse(t);defaults();S.upd=Date.now();pushState().then(()=>location.reload())}catch(x){toast('Invalid file')}})};
+}
+
+showCard();render();
+
+/* ================= AUTH + CLOUD SYNC ================= */
+async function startApp(user){
+  if(_ready&&_uid===user.id)return;
+  _uid=user.id;
+  let loc={};try{loc=JSON.parse(localStorage.getItem(K+'.'+_uid)||'{}')}catch(e){}
+  let rem=null;
+  try{const {data,error}=await _sb.from('progress').select('data').eq('user_id',_uid).maybeSingle();if(error)throw error;rem=data&&data.data}
+  catch(e){toast('⚠️ مفيش اتصال، شغالة بالنسخة اللي على الجهاز')}
+  S=(rem&&(rem.upd||0)>=(loc.upd||0))?rem:loc;
+  defaults();_ready=true;
+  if(!rem||(S.upd||0)>(rem.upd||0))pushState();
+  $('whoTxt').textContent='👤 '+user.email;
+  $('login').classList.add('hide');
+  showCard();render();
+  const cur=document.querySelector('#nav button.on');if(cur&&cur.dataset.t==='me')renderMe();
+}
+$('signOut').onclick=async()=>{clearTimeout(_saveT);await pushState();await _sb.auth.signOut();location.reload()};
+document.addEventListener('visibilitychange',async()=>{
+  if(!_ready)return;
+  if(document.hidden){clearTimeout(_saveT);pushState();return}
+  try{const {data}=await _sb.from('progress').select('data').eq('user_id',_uid).maybeSingle();
+    const r=data&&data.data;if(r&&(r.upd||0)>(S.upd||0)){S=r;defaults();render();showCard()}}catch(e){}
+});
+(async()=>{
+  const msg=$('loginMsg'),form=$('loginForm');
+  if(!window.supabase||SUPABASE_URL.startsWith('PASTE')){msg.textContent=window.supabase?'ضيفي SUPABASE_URL و SUPABASE_KEY في أول السكريبت.':'مفيش اتصال بالإنترنت.';return}
+  _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  const {data:{session}}=await _sb.auth.getSession();
+  if(session){startApp(session.user);return}
+  msg.textContent='اكتبي إيميلك وهنبعتلك لينك دخول. من غير باسورد.';form.classList.remove('hide');
+  _sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&ses.user)startApp(ses.user)});
+  form.onsubmit=async e=>{
+    e.preventDefault();msg.textContent='Sending…';
+    const {error}=await _sb.auth.signInWithOtp({email:$('loginEmail').value.trim(),options:{emailRedirectTo:location.href.split('#')[0].split('?')[0]}});
+    if(error){msg.textContent='⚠️ '+error.message;return}
+    form.classList.add('hide');
+    msg.textContent='✅ بعتنالك اللينك. افتحي الإيميل واضغطي عليه مرة واحدة.';
+  };
+})();
+</script>
+</body>
+</html>
