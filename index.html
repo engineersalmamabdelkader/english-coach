@@ -1222,15 +1222,18 @@ async function startApp(user){
   _uid=user.id;
   let loc={};try{loc=JSON.parse(localStorage.getItem(K+'.'+_uid)||'{}')}catch(e){}
   let rem=null;
-  try{const {data,error}=await _sb.from('progress').select('data').eq('user_id',_uid).maybeSingle();if(error)throw error;rem=data&&data.data}
-  catch(e){toast('⚠️ مفيش اتصال، شغالة بالنسخة اللي على الجهاز')}
+  try{const {data,error}=await withTimeout(_sb.from('progress').select('data').eq('user_id',_uid).maybeSingle(),8000,'load progress');if(error)throw error;rem=data&&data.data}
+  catch(e){console.error('progress load failed',e);toast('⚠️ مفيش اتصال، شغالة بالنسخة اللي على الجهاز')}
   S=(rem&&(rem.upd||0)>=(loc.upd||0))?rem:loc;
   defaults();_ready=true;
-  if(!rem||(S.upd||0)>(rem.upd||0))pushState();
   $('whoTxt').textContent='👤 '+user.email;
   $('login').classList.add('hide');
-  showCard();render();
-  const cur=document.querySelector('#nav button.on');if(cur&&cur.dataset.t==='me')renderMe();
+  try{showCard();render();
+    const cur=document.querySelector('#nav button.on');if(cur&&cur.dataset.t==='me')renderMe()}catch(e){console.error(e)}
+  if(!rem||(S.upd||0)>(rem.upd||0))pushState();
+}
+function withTimeout(p,ms,label){
+  return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout: '+label)),ms))]);
 }
 $('signOut').onclick=async()=>{clearTimeout(_saveT);await pushState();await _sb.auth.signOut();location.reload()};
 document.addEventListener('visibilitychange',async()=>{
@@ -1242,11 +1245,17 @@ document.addEventListener('visibilitychange',async()=>{
 (async()=>{
   const msg=$('loginMsg'),form=$('loginForm');
   if(!window.supabase||SUPABASE_URL.startsWith('PASTE')){msg.textContent=window.supabase?'ضيفي SUPABASE_URL و SUPABASE_KEY في أول السكريبت.':'مفيش اتصال بالإنترنت.';return}
-  _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-  const {data:{session}}=await _sb.auth.getSession();
+  try{
+    _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:(n,t,fn)=>fn()}});
+  }catch(e){msg.textContent='⚠️ '+e.message;return}
+  /* do not call Supabase inside this callback directly (can deadlock the auth client) */
+  _sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&ses.user)setTimeout(()=>startApp(ses.user),0)});
+  let session=null;
+  try{const r=await withTimeout(_sb.auth.getSession(),8000,'getSession');session=r.data&&r.data.session}
+  catch(e){console.error(e);msg.textContent='⚠️ '+e.message+' — جربي Ctrl+Shift+R أو نافذة Incognito.'}
   if(session){startApp(session.user);return}
-  msg.textContent='اكتبي إيميلك وهنبعتلك لينك دخول. من غير باسورد.';form.classList.remove('hide');
-  _sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&ses.user)startApp(ses.user)});
+  if(!/timeout/.test(msg.textContent))msg.textContent='اكتبي إيميلك وهنبعتلك لينك دخول. من غير باسورد.';
+  form.classList.remove('hide');
   form.onsubmit=async e=>{
     e.preventDefault();msg.textContent='Sending…';
     const {error}=await _sb.auth.signInWithOtp({email:$('loginEmail').value.trim(),options:{emailRedirectTo:location.href.split('#')[0].split('?')[0]}});
