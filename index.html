@@ -124,8 +124,17 @@ details summary{color:var(--pri)}
   <h2>⚡ English Coach</h2>
   <div id="loginMsg" class="mut">Loading…</div>
   <form id="loginForm" class="hide" style="margin-top:10px">
-   <input type="email" id="loginEmail" placeholder="your@email.com" required style="width:100%;margin-bottom:10px">
-   <button class="b" style="width:100%" type="submit">Send me a login link</button>
+   <input type="email" id="loginEmail" placeholder="your@email.com" autocomplete="username" required style="width:100%;margin-bottom:10px">
+   <input type="password" id="loginPass" placeholder="Password (6+ characters)" autocomplete="current-password" minlength="6" required style="width:100%;margin-bottom:10px">
+   <div class="row">
+    <button class="b" style="flex:1" type="submit" id="btnIn">Sign in</button>
+    <button class="b alt" style="flex:1" type="button" id="btnUp">Create account</button>
+   </div>
+   <button class="b alt sm" style="margin-top:10px" type="button" id="btnForgot">Forgot password?</button>
+  </form>
+  <form id="resetForm" class="hide" style="margin-top:10px">
+   <input type="password" id="newPass" placeholder="New password (6+ characters)" autocomplete="new-password" minlength="6" required style="width:100%;margin-bottom:10px">
+   <button class="b" style="width:100%" type="submit" id="btnReset">Save new password</button>
   </form>
  </div>
 </div>
@@ -1242,6 +1251,7 @@ document.addEventListener('visibilitychange',async()=>{
   try{const {data}=await _sb.from('progress').select('data').eq('user_id',_uid).maybeSingle();
     const r=data&&data.data;if(r&&(r.upd||0)>(S.upd||0)){S=r;defaults();render();showCard()}}catch(e){}
 });
+const authHash=location.hash;
 (async()=>{
   const msg=$('loginMsg'),form=$('loginForm');
   if(!window.supabase||SUPABASE_URL.startsWith('PASTE')){msg.textContent=window.supabase?'ضيفي SUPABASE_URL و SUPABASE_KEY في أول السكريبت.':'مفيش اتصال بالإنترنت.';return}
@@ -1249,19 +1259,60 @@ document.addEventListener('visibilitychange',async()=>{
     _sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,lock:(n,t,fn)=>fn()}});
   }catch(e){msg.textContent='⚠️ '+e.message;return}
   /* do not call Supabase inside this callback directly (can deadlock the auth client) */
-  _sb.auth.onAuthStateChange((ev,ses)=>{if(ses&&ses.user)setTimeout(()=>startApp(ses.user),0)});
+  let recovery=/type=recovery/.test(authHash);
+  const showReset=()=>{recovery=true;form.classList.add('hide');$('resetForm').classList.remove('hide');msg.textContent='اكتبي باسورد جديد.'};
+  _sb.auth.onAuthStateChange((ev,ses)=>{
+    if(ev==='PASSWORD_RECOVERY'){showReset();return}
+    if(ses&&ses.user&&!recovery)setTimeout(()=>startApp(ses.user),0)});
   let session=null;
   try{const r=await withTimeout(_sb.auth.getSession(),8000,'getSession');session=r.data&&r.data.session}
   catch(e){console.error(e);msg.textContent='⚠️ '+e.message+' — جربي Ctrl+Shift+R أو نافذة Incognito.'}
-  if(session){startApp(session.user);return}
-  if(!/timeout/.test(msg.textContent))msg.textContent='اكتبي إيميلك وهنبعتلك لينك دخول. من غير باسورد.';
-  form.classList.remove('hide');
+  if(session&&recovery){showReset()}
+  else if(session){startApp(session.user);return}
+  const inReset=!!(session&&recovery);
+  if(!/timeout/.test(msg.textContent)&&!inReset)msg.textContent=recovery?'⚠️ لينك تغيير الباسورد منتهي أو اتفتح قبل كده. اضغطي Forgot password واطلبي لينك جديد.':'سجلي دخول بإيميلك وباسورد. أول مرة؟ اضغطي Create account.';
+  if(!inReset)form.classList.remove('hide');
+  const creds=()=>({email:$('loginEmail').value.trim(),password:$('loginPass').value});
+  const busy=b=>{$('btnIn').disabled=$('btnUp').disabled=b};
+  const friendly=m=>/invalid login/i.test(m)?'الإيميل أو الباسورد غلط. لو أول مرة اضغطي Create account.':/already registered|already been registered/i.test(m)?'الإيميل ده مسجل قبل كده، اضغطي Sign in.':/rate limit/i.test(m)?'محاولات كتير، استني شوية وجربي تاني.':m;
   form.onsubmit=async e=>{
-    e.preventDefault();msg.textContent='Sending…';
-    const {error}=await _sb.auth.signInWithOtp({email:$('loginEmail').value.trim(),options:{emailRedirectTo:location.href.split('#')[0].split('?')[0]}});
-    if(error){msg.textContent='⚠️ '+error.message;return}
-    form.classList.add('hide');
-    msg.textContent='✅ بعتنالك اللينك. افتحي الإيميل واضغطي عليه مرة واحدة.';
+    e.preventDefault();busy(true);msg.textContent='Signing in…';
+    try{
+      const {data,error}=await withTimeout(_sb.auth.signInWithPassword(creds()),10000,'sign in');
+      if(error){msg.textContent='⚠️ '+friendly(error.message);return}
+      if(data&&data.session)startApp(data.session.user);
+    }catch(x){msg.textContent='⚠️ '+x.message}finally{busy(false)}
+  };
+  $('btnUp').onclick=async()=>{
+    const c=creds();
+    if(!c.email||c.password.length<6){msg.textContent='⚠️ اكتبي إيميل وباسورد 6 حروف على الأقل.';return}
+    busy(true);msg.textContent='Creating account…';
+    try{
+      const {data,error}=await withTimeout(_sb.auth.signUp(c),10000,'sign up');
+      if(error){msg.textContent='⚠️ '+friendly(error.message);return}
+      if(data&&data.session)startApp(data.session.user);
+      else msg.textContent='✅ اتعمل الحساب. لو Supabase طلب تأكيد الإيميل، افتحي الإيميل واضغطي على اللينك مرة واحدة، وبعدها Sign in.';
+    }catch(x){msg.textContent='⚠️ '+x.message}finally{busy(false)}
+  };
+  $('btnForgot').onclick=async()=>{
+    const email=$('loginEmail').value.trim();
+    if(!email){msg.textContent='⚠️ اكتبي إيميلك الأول وبعدين اضغطي Forgot password.';return}
+    busy(true);msg.textContent='Sending…';
+    try{
+      const {error}=await withTimeout(_sb.auth.resetPasswordForEmail(email,{redirectTo:location.href.split('#')[0].split('?')[0]}),10000,'reset');
+      msg.textContent=error?'⚠️ '+friendly(error.message):'✅ بعتنالك لينك تغيير الباسورد. افتحيه من نفس المتصفح مرة واحدة.';
+    }catch(x){msg.textContent='⚠️ '+x.message}finally{busy(false)}
+  };
+  $('resetForm').onsubmit=async e=>{
+    e.preventDefault();const pw=$('newPass').value;
+    if(pw.length<6){msg.textContent='⚠️ الباسورد 6 حروف على الأقل.';return}
+    $('btnReset').disabled=true;msg.textContent='Saving…';
+    try{
+      const {data,error}=await withTimeout(_sb.auth.updateUser({password:pw}),10000,'update password');
+      if(error){msg.textContent='⚠️ '+error.message;return}
+      recovery=false;history.replaceState(null,'',location.pathname);
+      startApp(data.user);
+    }catch(x){msg.textContent='⚠️ '+x.message}finally{$('btnReset').disabled=false}
   };
 })();
 </script>
