@@ -1543,7 +1543,33 @@ More natural: <natural version, if useful>
 Why: <very short explanation>
 YOUR TURN: <repeat or answer the next question>
 
-If the student says “ابدأ” or asks to start, begin with a very simple A1 speaking question such as: “Hi! What’s your name? Tell me 3 things about yourself.” Then build difficulty gradually.';
+If the student says “ابدأ” or asks to start, begin with a very simple A1 speaking question such as: “Hi! What’s your name? Tell me 3 things about yourself.” Then build difficulty gradually.
+
+CURRENT MODE: ${MODES[$('aiMode').value]||MODES.free}`;
+function aiBubble(c,t){const d=document.createElement('div');d.className='bub '+c;d.textContent=t;$('aiChat').appendChild(d);$('aiChat').scrollTop=1e9;return d}
+const aiOffSay=t=>{if($('aiSpeak').checked)say(t,.95)};
+const AIACK=['Good!','Nice one.','I see.','Okay, got it.','Great, thanks.','Interesting.'];
+const AIFU={
+ free:['Can you tell me more?','Why do you think so?','What happened next?'],
+ interview:['Can you give me an example?','What was your role in that project?','How did you solve that problem?'],
+ site:['What is the status of that work?','Is there any delay or clash?','Who needs to approve it?'],
+ travel:['Can you explain a bit more?','What would you say next?','Is there anything else you need?']
+};
+let aiOff={m:'free',q:[],i:0,turn:0,ans:0,words:0,mis:[]};
+function aiInit(){
+  $('aiKeyBox').innerHTML=keyHTML();$('aiMain').classList.remove('hide');
+  const sv=$('keySave'),dl=$('keyDel');
+  if(sv)sv.onclick=()=>{const v=$('keyIn').value.trim();if(!v)return;localStorage.setItem(KEYN,v);toast('✅ اتحفظ');aiInit();chat=[];aiStart()};
+  if(dl)dl.onclick=()=>{localStorage.removeItem(KEYN);aiInit();chat=[];aiStart()};
+}
+function aiOffStart(){
+  const m=$('aiMode').value;
+  const pool={free:FREE,interview:INTERVIEW,site:SCENARIOS,travel:TRAVEL}[m]||FREE;
+  aiOff={m:pool===FREE&&m!=='free'?'free':m,q:pool.map(x=>x.q),i:0,turn:0,ans:0,words:0,mis:[]};
+  aiOff.i=Math.floor(Math.random()*aiOff.q.length);
+  const first=aiOff.q[aiOff.i];aiBubble('t',first);aiOffSay(first);
+}
+function aiOffReply(text){
   aiOff.turn++;const a=pick(AIACK);
   if(aiOff.turn%2===1)return a+' '+pick(AIFU[aiOff.m]);
   aiOff.i=(aiOff.i+1)%aiOff.q.length;return a+' '+aiOff.q[aiOff.i];
